@@ -1,0 +1,7 @@
+*
+
+!.gitignore
+!.vimrc
+!.slate
+!Library/Application Support/Karabiner/private.xml
+
