@@ -13,6 +13,8 @@ alias finder	'Finder'
  
 ## Position aliases
 alias full         move screenOriginX;screenOriginY                screenSizeX;screenSizeY
+alias top	move screenOriginX;screenOriginY screenSizeX;screenSizeY/2
+alias bottom	move screenOriginX;screenOriginY+screenSizeY/2 screenSizeX;screenSizeY/2
 alias lefthalf     move screenOriginX;screenOriginY                screenSizeX/2;screenSizeY
 alias righthalf    move screenOriginX+screenSizeX/2;screenOriginY  screenSizeX/2;screenSizeY
 alias topleft      corner top-left                                 resize:screenSizeX/2;screenSizeY/2
@@ -37,14 +39,11 @@ bind o:${hyper}  throw next
 bind i:${hyper}  ${full}
 bind ;:${hyper}  ${lefthalf}
 bind ':${hyper}  ${righthalf}
-bind y:${hyper}  ${topleft}
-bind u:${hyper}  ${topright}
-bind b:${hyper}  ${bottomleft}
-bind n:${hyper}  ${bottomright}
+bind u:${hyper}  ${top}
+bind n:${hyper}  ${bottom}
+
+bind a:${hyper}  ${topleft}
+bind s:${hyper}  ${topright}
+bind z:${hyper}  ${bottomleft}
+bind x:${hyper}  ${bottomright}
  
-## App bindings
-# These are laid out on the left hand
-bind space:${hyper}  focus ${editor}
-bind w:${hyper}      focus ${browser}
-bind f:${hyper}      focus ${finder}
-bind d:${hyper}      focus ${terminal}

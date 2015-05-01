@@ -19,4 +19,10 @@
 <url>file:///Applications/MacVim.app</url>
 </vkopenurldef>
 </item>
+
+<item>
+	<name>Danish escape</name>
+	<identifier>danish.escape</identifier>
+	<autogen>__KeyToKey__ KeyCode::DANISH_DOLLAR, KeyCode::ESCAPE</autogen>
+</item>
 </root>
