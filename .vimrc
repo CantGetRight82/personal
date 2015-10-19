@@ -21,7 +21,7 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'nixprime/cpsm'
 Plugin 'tobyS/pdv'
 Plugin 'tobyS/vmustache'
-Plugin 'joonty/vim-phpqa'
+"Plugin 'joonty/vim-phpqa'
 Plugin 'airblade/vim-rooter'
 
 Plugin 'SirVer/ultisnips'
@@ -73,6 +73,10 @@ let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
 let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:10'
 let g:ctrlp_root_markers = [ 'ext_localconf.php', '.git/' ]
 let g:ctrlp_working_path_mode = 'r'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/](doc|tmp|node_modules)',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ }
 
 "ag config
 set grepprg=ag\ --nogroup\ --nocolor
@@ -81,7 +85,7 @@ let g:ctrlp_use_caching = 0
 
 "dbext config
 let $LC_CTYPE = 'UTF-8'
-let g:dbext_default_profile_root = 'type=MYSQL:user=root:passwd=ff:dbname=typo3'
+let g:dbext_default_profile_root = 'type=MYSQL:user=root:passwd=ff:dbname=spinnit'
 let g:dbext_default_profile = 'root'
 let g:dbext_default_buffer_lines=40
 
@@ -196,10 +200,10 @@ function! SwitchToPartner ()
 	
 endfunction
 
-set makeprg=iosBuildRun
+"set makeprg=iosBuildRun
 
 noremap <D-Up> :call SwitchToPartner()<cr>
-noremap <d-e> :so %<cr>
+"noremap <d-e> :so %<cr>
 noremap <Leader>q :silent call MakeClassMember()<cr>
 
 function! MakeClassMember()
