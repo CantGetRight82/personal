@@ -48,8 +48,8 @@ alias grid9	move screenOriginX+screenSizeX/1.5;screenOriginY+screenSizeY/1.5	scr
 bind space:${hyper} hint ASDFGHJKLQWERTYUIOPCVBN
  
 ## Focus Bindings
-bind j:${hyper} focus up
-bind k:${hyper} focus down
+bind j:${hyper} focus down
+bind k:${hyper} focus up
 bind h:${hyper} focus left
 bind l:${hyper} focus right
  
@@ -61,7 +61,7 @@ bind i:${hyper}  ${full}
 bind ;:${hyper}  ${lefthalf}
 bind ':${hyper}  ${righthalf}
 bind u:${hyper}  ${top}
-bind n:${hyper}  ${grid1}
+bind n:${hyper}  ${bottom}
 
 bind a:${hyper}  ${topleft}
 bind s:${hyper}  ${topright}

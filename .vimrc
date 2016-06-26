@@ -64,8 +64,14 @@ set autoread
 
 set hlsearch
 set incsearch
+
+set timeoutlen=1000 ttimeoutlen=0
+
+syntax on
+let g:solarized_termtrans = 1
 set background=dark
 colorscheme solarized
+
 
 set autoindent
 set tabstop=4 softtabstop=0 noexpandtab shiftwidth=4
@@ -122,6 +128,9 @@ nnoremap <C-b> :bprevious<CR>
 "Git
 noremap <leader>gs :Gstatus<cr>
 noremap <leader>gc :Gcommit<cr>
+
+noremap <F2> :w<cr>
+inoremap <F2> <C-o>:w<cr>
 
 "YCM
 let g:ycm_min_num_of_chars_for_completion = 2
