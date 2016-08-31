@@ -13,6 +13,7 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-unimpaired'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'dbext.vim'
 "Plugin 'Valloric/YouCompleteMe'
@@ -29,6 +30,7 @@ Plugin 'airblade/vim-rooter'
 "Plugin 'honza/vim-snippets'
 Plugin 'maksimr/vim-jsbeautify'
 "Plugin 'gilligan/vim-lldb'
+Plugin 'leafgarland/typescript-vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -75,6 +77,9 @@ colorscheme solarized
 
 set autoindent
 set tabstop=4 softtabstop=0 noexpandtab shiftwidth=4
+
+
+"set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 
 "ctrlp/cpsm config
 "note: cpsm has a install.sh
@@ -303,3 +308,9 @@ endif
 " https://github.com/c9s/perlomni.vim
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
+"function! WriteAndRun()
+	"write
+	"execute "!php resources/import.php"
+"endfunction
+"noremap § :call WriteAndRun()<cr>
+"inoremap § <C-o>:call WriteAndRun()<cr>
