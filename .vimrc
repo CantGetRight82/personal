@@ -1,5 +1,8 @@
+
 set nocompatible              " be iMproved, required
 filetype off                  " required
+
+let $PYTHONHOME="/usr/local/Cellar/python/2.7.12"
 
 let macvim_skip_cmd_opt_movement = 1
 
@@ -16,8 +19,12 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'dbext.vim'
-"Plugin 'Valloric/YouCompleteMe'
+
+Plugin 'Shougo/vimproc.vim'
 Plugin 'Shougo/neocomplete.vim'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'Quramy/tsuquyomi'
+Plugin 'leafgarland/typescript-vim'
 
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'nixprime/cpsm'
@@ -30,7 +37,6 @@ Plugin 'airblade/vim-rooter'
 "Plugin 'honza/vim-snippets'
 Plugin 'maksimr/vim-jsbeautify'
 "Plugin 'gilligan/vim-lldb'
-Plugin 'leafgarland/typescript-vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -38,17 +44,6 @@ filetype plugin indent on    " required
 
 set completeopt-=preview
 
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
 
 " Prevent creation of files in wrong directories
 set noswapfile
@@ -59,6 +54,9 @@ set number
 set relativenumber
 au FocusLost * :set norelativenumber
 au FocusGained * :set relativenumber
+
+set autoindent
+set tabstop=4 softtabstop=0 noexpandtab shiftwidth=4
 
 set showcmd
 set ruler
@@ -85,7 +83,7 @@ set tabstop=4 softtabstop=0 noexpandtab shiftwidth=4
 "note: cpsm has a install.sh
 let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
 let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:10'
-let g:ctrlp_root_markers = [ 'ext_localconf.php', '.git/' ]
+let g:ctrlp_root_markers = [ 'package.json', '.git/' ]
 let g:ctrlp_working_path_mode = 'r'
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\v[\/](doc|tmp|node_modules)',
@@ -99,7 +97,7 @@ let g:ctrlp_use_caching = 0
 
 "dbext config
 let $LC_CTYPE = 'UTF-8'
-let g:dbext_default_profile_root = 'type=MYSQL:user=root:passwd=ff:dbname=spinnit'
+let g:dbext_default_profile_root = 'type=MYSQL:user=root:passwd=ff:dbname=deploy'
 let g:dbext_default_profile = 'root'
 let g:dbext_default_buffer_lines=40
 
@@ -110,7 +108,7 @@ nnoremap <leader>p :call pdv#DocumentCurrentLine()<CR>
 "vim rooter
 let g:rooter_disable_map = 1
 let g:rooter_silent_chdir = 1
-let g:rooter_patterns = g:ctrlp_root_markers
+let g:rooter_patterns = [ 'package.json', '.git/' ]
 
 "refresh browser
 function! ReloadChrome()
@@ -174,7 +172,7 @@ let g:UltiSnipsSnippetsDir = $HOME . "/.vim/bundle/vim-snippets/UltiSnips"
 let g:UltiSnipsExpandTrigger = "<c-j>"
 
 
-noremap <leader>f :grep '
+noremap <leader>f :grep 
 
 nnoremap <D-[> :cp<cr>
 nnoremap <D-]> :cn<cr>
@@ -224,6 +222,7 @@ function! SwitchToPartner ()
 	
 endfunction
 
+
 "set makeprg=iosBuildRun
 
 noremap <D-Up> :call SwitchToPartner()<cr>
@@ -248,11 +247,13 @@ let g:neocomplete#sources#syntax#min_keyword_length = 3
 let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
 " Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
+let g:neocomplete#sources#dictionary#dictionaries = { "_": "/tmp/words" }
+
+
+
+set dictionary=/tmp/words
+
+
 
 " Define keyword.
 if !exists('g:neocomplete#keyword_patterns')
