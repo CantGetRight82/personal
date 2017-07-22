@@ -4,7 +4,9 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 let g:deoplete#enable_at_startup = 1
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
-Plug 'vim-syntastic/syntastic'
+Plug 'Shougo/vimproc.vim'
+
+"Plug 'vim-syntastic/syntastic'
 Plug 'Quramy/tsuquyomi'
 Plug 'leafgarland/typescript-vim'
 
@@ -16,6 +18,15 @@ Plug 'nixprime/cpsm'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-unimpaired'
+
+Plug 'idanarye/vim-vebugger'
+
+Plug 'jelera/vim-javascript-syntax'
+hi link javaScriptTemplateDelim String
+hi link javaScriptTemplateVar Text
+hi link javaScriptTemplateString String
+
+set noswapfile
 
 set grepprg=ag\ --nogroup\ --nocolor\ --ignore=*.js.map
 let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
@@ -49,3 +60,12 @@ au FocusGained * :set relativenumber
 
 set autoindent
 set tabstop=4 softtabstop=0 noexpandtab shiftwidth=4
+
+nmap <tab> :b#<cr>
+
+let mapleader=","
+noremap <Leader>1 :call jobstart("make cam1")<cr>
+noremap <Leader>2 :call jobstart("make cam2")<cr>
+noremap <Leader>3 :call jobstart("make cam3")<cr>
+noremap <Leader>4 :call jobstart("make cam4")<cr>
+
