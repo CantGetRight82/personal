@@ -1,65 +1,6 @@
 call plug#begin('~/.config/nvim/plugs')
 
-<<<<<<< HEAD
 Plug 'altercation/vim-colors-solarized'
-=======
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-let g:deoplete#enable_at_startup = 1
-" inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-Plug 'ervandew/supertab'
-
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
-Plug 'ternjs/tern_for_vim'
-Plug 'carlitux/deoplete-ternjs'
-Plug 'othree/jspc.vim'
-
-let g:deoplete#omni#functions = {}
-let g:deoplete#omni#functions.javascript = [
-  \ 'tern#Complete',
-  \ 'jspc#omni'
-\]
-
-set completeopt=longest,menuone,preview
-let g:deoplete#sources = {}
-let g:deoplete#sources['javascript'] = ['file', 'ultisnips', 'ternjs']
-let g:tern#command = ['tern']
-let g:tern#arguments = ['--persistent']
-
-
-autocmd FileType javascript let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
-let g:UltiSnipsExpandTrigger="<C-j>"
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-
-Plug 'vim-syntastic/syntastic'
-Plug 'Quramy/tsuquyomi'
-Plug 'leafgarland/typescript-vim'
-
-
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-unimpaired'
-
-Plug 'vim-scripts/dbext.vim'
-Plug 'vim-scripts/perl-support.vim'
-
-
-let g:tern_request_timeout = 1
-let g:tern_show_signature_in_pum = '1' 
-let g:tern#command = ["tern"]
-let g:tern#arguments = ["--persistent"]
-
-Plug 'easymotion/vim-easymotion'
-let g:EasyMotion_do_mapping = 0 
-"nmap s <Plug>(easymotion-overwin-f2)
-let g:EasyMotion_smartcase = 1
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
-
-"ctrlp/cpsm config
-"note: cpsm has a install.sh
-Plug 'ctrlpvim/ctrlp.vim'
->>>>>>> 0ca642d3ccb1b7c738401f5ba155387c3244cb26
 Plug 'nixprime/cpsm'
 
 Plug 'roxma/nvim-completion-manager'
@@ -97,7 +38,6 @@ au FocusGained * :set relativenumber
 set autoindent
 set tabstop=4 softtabstop=0 noexpandtab shiftwidth=4
 
-<<<<<<< HEAD
 " -- Key mappings
 "swap prev buffer
 noremap <Tab> <C-^>
@@ -156,10 +96,3 @@ command! -complete=shellcmd -nargs=+ Shell call s:ExecuteInShell(<q-args>)
 noremap <Leader>ta :!task add 
 noremap <Leader>tl :Shell task list<cr>
 noremap <Leader>td :call jobstart('task done '.matchstr(getline('.'),"[0-9]\\+"))<cr>:Shell task list<cr>
-=======
-
-
-
-noremap <tab> :b#<cr>
->>>>>>> 0ca642d3ccb1b7c738401f5ba155387c3244cb26
-
