@@ -9,6 +9,8 @@ Plug 'roxma/ncm-flow'
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 
+Plug 'tpope/vim-commentary'
+
 call plug#end()
 
 let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
@@ -17,9 +19,9 @@ let $NVIM_NCM_MULTI_THREAD=0
 
 noremap <c-p> :FZF<cr>
 
+  " \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
 let g:rg_command = '
   \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
-  \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
   \ -g "!{.git,node_modules,vendor}/*" '
 
 command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
@@ -46,6 +48,17 @@ noremap <Tab> <C-^>
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-f> <plug>(fzf-complete-path)
+imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+imap <c-x><c-l> <plug>(fzf-complete-line)
+
+
+
+command! -nargs=1 ChromeLine call append(line('.'), "<args>")
+noremap <F10> :call fzf#run({'source': 'osascript ~/apples/chrome.text.scpt', 'sink': 'ChromeLine' })<cr>
+
+
 " -- VUE
 function! s:DetermineVueSyntax()
 	let l:row = line('.')
@@ -63,10 +76,11 @@ function! s:DetermineVueSyntax()
 			endif
 		endif
 	endwhile
-	if row == -1
-		if l:target != &ft
-			execute("setf ". l:target)
-		endif
+	if row != -1
+		let l:target = "html"
+	endif
+	if l:target != &ft
+		execute("setf ". l:target)
 	endif
 endfunction
 
