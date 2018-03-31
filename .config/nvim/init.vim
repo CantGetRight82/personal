@@ -1,15 +1,18 @@
 call plug#begin('~/.config/nvim/plugs')
 
 Plug 'altercation/vim-colors-solarized'
-Plug 'nixprime/cpsm'
 
-Plug 'roxma/nvim-completion-manager'
-Plug 'roxma/ncm-flow'
 
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'jremmen/vim-ripgrep'
+Plug 'tpope/vim-unimpaired'
+
+Plug 'chase/vim-ansible-yaml'
+
 
 call plug#end()
 
@@ -21,9 +24,8 @@ noremap <c-p> :FZF<cr>
 
   " \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
 let g:rg_command = '
-  \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
-  \ -g "!{.git,node_modules,vendor}/*" '
-
+\ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
+\ -g "!{.git,node_modules,vendor}/*" '
 command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
 
 
@@ -57,9 +59,32 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 
 command! -nargs=1 ChromeLine call append(line('.'), "<args>")
 noremap <F10> :call fzf#run({'source': 'osascript ~/apples/chrome.text.scpt', 'sink': 'ChromeLine' })<cr>
+noremap <leader>p :!node build/addpage.js 
+noremap <leader>c :!node build/addcomponent.js 
+inoremap <leader>c console.log();
+
+command! -nargs=1 AppLine call append(line('.'), "<args>") | execute "normal! j"
+noremap \q :call fzf#run({'source': 'cat ~/dict/css', 'sink': 'AppLine' })<cr>
+noremap \e :e ~/dict/css<cr>
 
 
 " -- VUE
+
+function! ToScriptOrStyle()
+	if &ft == "javascript"
+		execute "normal! gg/<style\<cr>jjzz"
+	else
+		execute "normal! gg/<script\<cr>jjzz"
+	end
+	echom &ft
+endfunction
+
+
+noremap \\ :call ToScriptOrStyle()<cr>
+
+noremap \i :execute "read !vue-import ".expand("%:p")." ".getcwd()." ".expand("<cword>")<cr>kdd
+
+
 function! s:DetermineVueSyntax()
 	let l:row = line('.')
 	let l:target = ""
@@ -90,6 +115,7 @@ augroup vue
 augroup END
 
 inoremap <expr> <c-x><c-k> fzf#complete('cat /tmp/css')
+
 
 
 function! s:ExecuteInShell(command)
