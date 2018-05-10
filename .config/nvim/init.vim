@@ -14,13 +14,49 @@ Plug 'tpope/vim-unimpaired'
 Plug 'chase/vim-ansible-yaml'
 
 
+" let g:lsp_log_verbose = 1
+" let g:lsp_log_file = expand('~/vim-lsp.log')
+" let g:asyncomplete_log_file = expand('~/asyncomplete.log')
+
+
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+
+
 call plug#end()
+
+let g:lsp_signs_enabled = 1         " enable signs
+let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
+
+" if executable('typescript-language-server')
+"     au User lsp_setup call lsp#register_server({
+"       \ 'name': 'typescript-language-server',
+"       \ 'cmd': { server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+"       \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
+"       \ 'whitelist': ['typescript', 'javascript', 'javascript.jsx']
+"       \ })
+" endif
+
+
+    au User lsp_setup call lsp#register_server({
+      \ 'name': 'vuel',
+      \ 'cmd': { server_info->[&shell, &shellcmdflag, '/usr/local/bin/node /Users/rinkevandenberg/git/vuel']},
+      \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
+      \ 'whitelist': ['typescript', 'javascript', 'javascript.jsx']
+      \ })
+
 
 let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
 let $NVIM_NCM_LOG_LEVEL="DEBUG"
 let $NVIM_NCM_MULTI_THREAD=0
 
-noremap <c-p> :FZF<cr>
+noremap <c-p> :GFiles<cr>
 
   " \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
 let g:rg_command = '
