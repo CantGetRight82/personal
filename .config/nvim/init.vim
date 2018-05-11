@@ -32,23 +32,13 @@ let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal 
 
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
-
-" if executable('typescript-language-server')
-"     au User lsp_setup call lsp#register_server({
-"       \ 'name': 'typescript-language-server',
-"       \ 'cmd': { server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
-"       \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
-"       \ 'whitelist': ['typescript', 'javascript', 'javascript.jsx']
-"       \ })
-" endif
-
+inoremap <expr> <cr> pumvisible() ? "\<C-y><C-o>:execute 'normal! 0df>==$'\<cr>" : "\<cr>"
 
     au User lsp_setup call lsp#register_server({
       \ 'name': 'vuel',
-      \ 'cmd': { server_info->[&shell, &shellcmdflag, '/usr/local/bin/node /Users/rinkevandenberg/git/vuel']},
+      \ 'cmd': { server_info->[&shell, &shellcmdflag, '/usr/local/bin/node /Users/rinke/git/vuel']},
       \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
-      \ 'whitelist': ['typescript', 'javascript', 'javascript.jsx']
+      \ 'whitelist': ['typescript', 'javascript', 'javascript.jsx', 'css']
       \ })
 
 
