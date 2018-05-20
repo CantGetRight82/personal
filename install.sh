@@ -12,6 +12,7 @@ function createLink {
 }
 
 createLink ~/personal/.tmux.conf ~/.tmux.conf
+createLink ~/personal/.slate.js ~/.slate.js
 createLink ~/personal/init.vim ~/.config/nvim/init.vim
 createLink ~/personal/karabiner.xml "/Users/rinkevandenberg/Library/Application Support/Karabiner/private.xml"
 createLink ~/personal/apples ~/apples

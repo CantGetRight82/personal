@@ -14,9 +14,9 @@ Plug 'tpope/vim-unimpaired'
 Plug 'chase/vim-ansible-yaml'
 
 
-let g:lsp_log_verbose = 1
-let g:lsp_log_file = expand('~/vim-lsp.log')
-let g:asyncomplete_log_file = expand('~/asyncomplete.log')
+" let g:lsp_log_verbose = 1
+" let g:lsp_log_file = expand('~/vim-lsp.log')
+" let g:asyncomplete_log_file = expand('~/asyncomplete.log')
 
 
 Plug 'prabirshrestha/asyncomplete.vim'
@@ -38,21 +38,21 @@ fu! TextEditComplete()
 	let l:line = search('fz.cut')
 	if l:line > 0
 		execute "normal! x2dbdf|A "
-		" execute "normal! 0df|df|A "
 	endif
 endfu
 
 augroup textEdit
 	au!
-	autocmd CompleteDone <buffer> call TextEditComplete()
+	autocmd CompleteDone * call TextEditComplete()
 augroup END
 
-    au User lsp_setup call lsp#register_server({
-      \ 'name': 'vuel',
-      \ 'cmd': { server_info->[&shell, &shellcmdflag, '/usr/local/bin/node ~/git/vuel']},
-      \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
-      \ 'whitelist': ['typescript', 'javascript', 'javascript.jsx', 'css']
-      \ })
+
+au User lsp_setup call lsp#register_server({
+  \ 'name': 'vuel',
+  \ 'cmd': { server_info->[&shell, &shellcmdflag, '/usr/local/bin/node ~/git/vuel']},
+  \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
+  \ 'whitelist': ['typescript', 'javascript', 'javascript.jsx', 'css']
+  \ })
 
 
 let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
