@@ -14,9 +14,9 @@ Plug 'tpope/vim-unimpaired'
 Plug 'chase/vim-ansible-yaml'
 
 
-" let g:lsp_log_verbose = 1
-" let g:lsp_log_file = expand('~/vim-lsp.log')
-" let g:asyncomplete_log_file = expand('~/asyncomplete.log')
+let g:lsp_log_verbose = 1
+let g:lsp_log_file = expand('~/vim-lsp.log')
+let g:asyncomplete_log_file = expand('~/asyncomplete.log')
 
 
 Plug 'prabirshrestha/asyncomplete.vim'
@@ -32,11 +32,24 @@ let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal 
 
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y><C-o>:execute 'normal! 0df>==$'\<cr>" : "\<cr>"
+
+
+fu! TextEditComplete()
+	let l:line = search('fz.cut')
+	if l:line > 0
+		execute "normal! x2dbdf|A "
+		" execute "normal! 0df|df|A "
+	endif
+endfu
+
+augroup textEdit
+	au!
+	autocmd CompleteDone <buffer> call TextEditComplete()
+augroup END
 
     au User lsp_setup call lsp#register_server({
       \ 'name': 'vuel',
-      \ 'cmd': { server_info->[&shell, &shellcmdflag, '/usr/local/bin/node /Users/rinke/git/vuel']},
+      \ 'cmd': { server_info->[&shell, &shellcmdflag, '/usr/local/bin/node ~/git/vuel']},
       \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
       \ 'whitelist': ['typescript', 'javascript', 'javascript.jsx', 'css']
       \ })
