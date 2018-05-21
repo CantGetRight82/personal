@@ -35,3 +35,8 @@ hyper('l', (win)=> {
 		height:'screenSizeY'
 	});
 });
+
+
+slate.bind('f1', ()=> {
+	slate.shell('/usr/local/bin/node /Users/rinkevandenberg/personal/auto.js');
+});

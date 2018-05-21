@@ -25,16 +25,13 @@ Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 
 Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
 Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
+let g:UltiSnipsSnippetDirectories = [ expand('~/personal/snips') ]
 
 call plug#end()
 
 let g:lsp_signs_enabled = 1         " enable signs
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
-
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 
 fu! TextEditComplete()
@@ -54,10 +51,10 @@ au User lsp_setup call lsp#register_server({
   \ 'name': 'vuel',
   \ 'cmd': { server_info->[&shell, &shellcmdflag, '/usr/local/bin/node ~/git/vuel']},
   \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
-  \ 'whitelist': ['typescript', 'javascript', 'javascript.jsx', 'css']
+  \ 'whitelist': ['css']
   \ })
 
-let g:UltiSnipsExpandTrigger="<c-e>"
+let g:UltiSnipsExpandTrigger="<tab>"
     call asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
         \ 'name': 'ultisnips',
         \ 'whitelist': ['*'],
@@ -95,8 +92,9 @@ set tabstop=4 softtabstop=0 noexpandtab shiftwidth=4
 noremap <Tab> <C-^>
 
 "tab completion
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
 
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
@@ -184,3 +182,32 @@ command! -complete=shellcmd -nargs=+ Shell call s:ExecuteInShell(<q-args>)
 noremap <Leader>ta :!task add 
 noremap <Leader>tl :Shell task list<cr>
 noremap <Leader>td :call jobstart('task done '.matchstr(getline('.'),"[0-9]\\+"))<cr>:Shell task list<cr>
+
+
+function! s:CreateVimComponent(name)
+	let l:line = search("<" . a:name)
+	if l:line == 0
+		let	l:line = search("<template")
+		call append(l:line, "\t<" . a:name . " />")
+	endif
+
+	let l:line = search("import " . a:name)
+	if l:line == 0
+		let	l:line = search("<script")
+		call append(l:line, "import " . a:name . " from './" . a:name . "'")
+	endif
+
+	let	l:line = search("components:")
+	if l:line == 0
+		let	l:line = search("export default {")
+		call append(l:line, "\tcomponents: {\n\t}")
+	endif
+
+	let l:line = search(a:name . ",")
+	if l:line == 0
+		let	l:line = search("components:")
+		call append(l:line, "\t" . a:name . ",")
+	endif
+endfunction
+
+command! -nargs=+ VueComponent call s:CreateVimComponent(<q-args>)
