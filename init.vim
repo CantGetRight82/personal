@@ -25,7 +25,6 @@ Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 
 Plug 'SirVer/ultisnips'
-Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
 let g:UltiSnipsSnippetDirectories = [ expand('~/personal/snips') ]
 
 call plug#end()
@@ -51,15 +50,8 @@ au User lsp_setup call lsp#register_server({
   \ 'name': 'vuel',
   \ 'cmd': { server_info->[&shell, &shellcmdflag, '/usr/local/bin/node ~/git/vuel']},
   \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
-  \ 'whitelist': ['css']
+  \ 'whitelist': ['css', 'javascript']
   \ })
-
-let g:UltiSnipsExpandTrigger="<tab>"
-    call asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
-        \ 'name': 'ultisnips',
-        \ 'whitelist': ['*'],
-        \ 'completor': function('asyncomplete#sources#ultisnips#completor'),
-        \ }))
 
 let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
 let $NVIM_NCM_LOG_LEVEL="DEBUG"
@@ -91,23 +83,15 @@ set tabstop=4 softtabstop=0 noexpandtab shiftwidth=4
 "swap prev buffer
 noremap <Tab> <C-^>
 
-"tab completion
-" inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
+inoremap <expr> <cr> pumvisible() ? "\<C-n>\<C-y>" : "\<cr>"
 
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 
-
-
 command! -nargs=1 ChromeLine call append(line('.'), "<args>")
 noremap <F10> :call fzf#run({'source': 'osascript ~/apples/chrome.text.scpt', 'sink': 'ChromeLine' })<cr>
-noremap <leader>p :!node build/addpage.js 
-noremap <leader>c :!node build/addcomponent.js 
-inoremap <leader>c console.log();
 
 command! -nargs=1 AppLine call append(line('.'), "<args>") | execute "normal! j"
 noremap \q :call fzf#run({'source': 'cat ~/dict/css', 'sink': 'AppLine' })<cr>
@@ -133,22 +117,14 @@ noremap \i :execute "read !vue-import ".expand("%:p")." ".getcwd()." ".expand("<
 
 function! s:DetermineVueSyntax()
 	let l:row = line('.')
-	let l:target = ""
-	while row >= 1
-		let l:row -= 1
-		let l:line = getline(l:row)
-		if strlen(l:line) > 4 
-			if line =~ '<scr'
-				let l:target = "javascript"
-				let l:row = -1
-			elseif line =~ '<sty'
-				let l:target = "css"
-				let l:row = -1
-			endif
+	let l:target = "html"
+	let l:script = search("<script", "n")
+	let l:style = search("<style", "n")
+	if l:row >= l:script
+		let l:target = "javascript"
+		if l:row >= l:style
+			let l:target = "css"
 		endif
-	endwhile
-	if row != -1
-		let l:target = "html"
 	endif
 	if l:target != &ft
 		execute("setf ". l:target)
@@ -160,54 +136,21 @@ augroup vue
   au CursorMoved *.vue call s:DetermineVueSyntax()
 augroup END
 
-inoremap <expr> <c-x><c-k> fzf#complete('cat /tmp/css')
+noremap <c-s> :w<cr>:so %<cr>
 
-
-
-function! s:ExecuteInShell(command)
-  let command = join(map(split(a:command), 'expand(v:val)'))
-  let winnr = bufwinnr('^' . command . '$')
-  silent! execute  winnr < 0 ? 'botright vnew ' . fnameescape(command) : winnr . 'wincmd w'
-  setlocal buftype=nowrite bufhidden=wipe nobuflisted noswapfile nowrap number
-  echo 'Execute ' . command . '...'
-  silent! execute 'silent %!'. command
-  silent! execute 'resize '
-  silent! redraw
-  silent! execute 'au BufUnload <buffer> execute bufwinnr(' . bufnr('#') . ') . ''wincmd w'''
-  silent! execute 'nnoremap <silent> <buffer> <LocalLeader>r :call <SID>ExecuteInShell(''' . command . ''')<CR>'
-  echo 'Shell command ' . command . ' executed.'
+function! s:AfterAppend(when, after, append)
+	let l:line = search(a:when)
+	if l:line == 0
+		let	l:line = search(a:after)
+		call append(l:line, a:append)
+	endif
 endfunction
-command! -complete=shellcmd -nargs=+ Shell call s:ExecuteInShell(<q-args>)
-
-noremap <Leader>ta :!task add 
-noremap <Leader>tl :Shell task list<cr>
-noremap <Leader>td :call jobstart('task done '.matchstr(getline('.'),"[0-9]\\+"))<cr>:Shell task list<cr>
-
 
 function! s:CreateVimComponent(name)
-	let l:line = search("<" . a:name)
-	if l:line == 0
-		let	l:line = search("<template")
-		call append(l:line, "\t<" . a:name . " />")
-	endif
-
-	let l:line = search("import " . a:name)
-	if l:line == 0
-		let	l:line = search("<script")
-		call append(l:line, "import " . a:name . " from './" . a:name . "'")
-	endif
-
-	let	l:line = search("components:")
-	if l:line == 0
-		let	l:line = search("export default {")
-		call append(l:line, "\tcomponents: {\n\t}")
-	endif
-
-	let l:line = search(a:name . ",")
-	if l:line == 0
-		let	l:line = search("components:")
-		call append(l:line, "\t" . a:name . ",")
-	endif
+	call s:AfterAppend("<".a:name, "<template", "\t<" . a:name . " />")
+	call s:AfterAppend("import " . a:name, "<script", "import " . a:name . " from './" . a:name . "'")
+	call s:AfterAppend( "components:", "export default {", "\tcomponents: {\n\t}")
+	call s:AfterAppend(a:name . ",", "components:", "\t" . a:name . ",")
 endfunction
 
 command! -nargs=+ VueComponent call s:CreateVimComponent(<q-args>)

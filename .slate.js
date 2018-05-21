@@ -1,42 +1,36 @@
+//noremap <c-s> :w<cr>:!osascript -e 'tell app "Slate" to quit'<cr>:!osascript -e 'tell app "Slate" to activate'<cr>:!osascript -e 'tell app "Terminal" to activate'<cr>
 
 function hyper(key, next) {
 	slate.bind(key+':ctrl;cmd;alt;shift', next);
 }
 
+function winSize(win, x, y, width, height) {
+	win.move( { x, y });
+	win.resize( { width, height });
+}
+
 hyper('q', (win)=> {
-	win.move( {
-		x:'screenOriginX',
-		y:'screenOriginY',
-	});
-	win.resize( {
-		width:'screenSizeX',
-		height:'screenSizeY'
-	});
+	winSize( win, 
+		'screenOriginX', 'screenOriginY',
+		'screenSizeX', 'screenSizeY'
+	);
 });
 
 hyper('h', (win)=> {
-	win.move( {
-		x:'screenOriginX',
-		y:'screenOriginY',
-	});
-	win.resize( {
-		width:'screenSizeX/2',
-		height:'screenSizeY'
-	});
+	winSize( win, 
+		'screenOriginX', 'screenOriginY',
+		'screenSizeX/3', 'screenSizeY'
+	);
 });
 
 hyper('l', (win)=> {
-	win.move( {
-		x:'screenOriginX + screenSizeX/2',
-		y:'screenOriginY',
-	});
-	win.resize( {
-		width:'screenSizeX/2',
-		height:'screenSizeY'
-	});
+	winSize( win, 
+		'screenOriginX + screenSizeX/3', 'screenOriginY',
+		'screenSizeX/1.5', 'screenSizeY'
+	);
 });
-
 
 slate.bind('f1', ()=> {
 	slate.shell('/usr/local/bin/node /Users/rinkevandenberg/personal/auto.js');
 });
+

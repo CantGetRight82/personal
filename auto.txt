@@ -2,3 +2,26 @@ ESCAPE
 :q! ENTER
 "nvim src/App.vue" ENTER
 ":VueComponent HiThere" ENTER
+gg
+j
+j
+j
+j
+j
+j
+j
+j
+j
+j
+j
+j
+j
+j
+j
+j
+j
+j
+j
+j
+j
+j
