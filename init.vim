@@ -10,13 +10,9 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'jremmen/vim-ripgrep'
 Plug 'tpope/vim-unimpaired'
-
 Plug 'chase/vim-ansible-yaml'
 
 
-" let g:lsp_log_verbose = 1
-" let g:lsp_log_file = expand('~/vim-lsp.log')
-" let g:asyncomplete_log_file = expand('~/asyncomplete.log')
 
 
 Plug 'prabirshrestha/asyncomplete.vim'
@@ -29,6 +25,9 @@ let g:UltiSnipsSnippetDirectories = [ expand('~/personal/snips') ]
 
 call plug#end()
 
+" let g:lsp_log_verbose = 1
+" let g:lsp_log_file = expand('~/vim-lsp.log')
+" let g:asyncomplete_log_file = expand('~/asyncomplete.log')
 let g:lsp_signs_enabled = 1         " enable signs
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
 
@@ -57,7 +56,7 @@ let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
 let $NVIM_NCM_LOG_LEVEL="DEBUG"
 let $NVIM_NCM_MULTI_THREAD=0
 
-noremap <c-p> :GFiles<cr>
+noremap <c-p> :Files<cr>
 
   " \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
 let g:rg_command = '
@@ -94,8 +93,6 @@ command! -nargs=1 ChromeLine call append(line('.'), "<args>")
 noremap <F10> :call fzf#run({'source': 'osascript ~/apples/chrome.text.scpt', 'sink': 'ChromeLine' })<cr>
 
 command! -nargs=1 AppLine call append(line('.'), "<args>") | execute "normal! j"
-noremap \q :call fzf#run({'source': 'cat ~/dict/css', 'sink': 'AppLine' })<cr>
-noremap \e :e ~/dict/css<cr>
 
 
 " -- VUE
@@ -134,6 +131,7 @@ endfunction
 augroup vue
   au!
   au CursorMoved *.vue call s:DetermineVueSyntax()
+  au BufEnter *.vue call s:DetermineVueSyntax()
 augroup END
 
 noremap <c-s> :w<cr>:so %<cr>
@@ -151,6 +149,18 @@ function! s:CreateVimComponent(name)
 	call s:AfterAppend("import " . a:name, "<script", "import " . a:name . " from './" . a:name . "'")
 	call s:AfterAppend( "components:", "export default {", "\tcomponents: {\n\t}")
 	call s:AfterAppend(a:name . ",", "components:", "\t" . a:name . ",")
+
+	silent write
+	let l:filename = a:name .'.vue'
+	let l:path = globpath('src', '**/' . l:filename )
+	if len(l:path) > 0
+	"	"TODO use path in import
+		echom "exist"
+	else
+		let l:path = "src/" . l:filename
+		exe "!cp ~/personal/component.vue " . l:path
+		exe "edit " . l:path
+	endif
 endfunction
 
 command! -nargs=+ VueComponent call s:CreateVimComponent(<q-args>)
