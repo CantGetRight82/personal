@@ -22,7 +22,8 @@ Plug 'prabirshrestha/asyncomplete-lsp.vim'
 
 Plug 'SirVer/ultisnips'
 let g:UltiSnipsSnippetDirectories = [ expand('~/personal/snips') ]
-let g:UltiSnipsExpandTrigger = '<c-e>'
+let g:UltiSnipsExpandTrigger = "<c-e>"
+let g:UltiSnipsListSnippets = "<c-d>"
 
 call plug#end()
 
@@ -34,7 +35,7 @@ let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal 
 
 
 fu! TextEditComplete()
-	let l:line = search('fz.cut')
+	let l:line = z.cut')
 	if l:line > 0
 		execute "normal! x2dbdf|A "
 	endif
@@ -50,7 +51,7 @@ au User lsp_setup call lsp#register_server({
   \ 'name': 'vuel',
   \ 'cmd': { server_info->[&shell, &shellcmdflag, '/usr/local/bin/node ~/git/vuel']},
   \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
-  \ 'whitelist': ['css', 'javascript']
+  \ 'whitelist': ['css']
   \ })
 
 let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
