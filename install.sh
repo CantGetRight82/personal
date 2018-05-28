@@ -6,15 +6,15 @@ function createLink {
 	TO=$2
 	echo $TO
 	if [ -h "$TO" ] || [ -f "$TO" ] || [ -d "$TO" ]; then
-		rm "$TO"
+		rm -rf "$TO"
 	fi
 	ln -s "$FROM" "$TO"
 }
 
 createLink ~/personal/.tmux.conf ~/.tmux.conf
+createLink ~/personal/.bash_profile ~/.bash_profile
 createLink ~/personal/.slate.js ~/.slate.js
 createLink ~/personal/init.vim ~/.config/nvim/init.vim
-createLink ~/personal/karabiner.xml "/Users/rinkevandenberg/Library/Application Support/Karabiner/private.xml"
 createLink ~/personal/apples ~/apples
 
 # apples

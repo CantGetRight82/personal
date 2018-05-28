@@ -22,6 +22,7 @@ Plug 'prabirshrestha/asyncomplete-lsp.vim'
 
 Plug 'SirVer/ultisnips'
 let g:UltiSnipsSnippetDirectories = [ expand('~/personal/snips') ]
+let g:UltiSnipsExpandTrigger = '<c-e>'
 
 call plug#end()
 
@@ -82,7 +83,9 @@ set tabstop=4 softtabstop=0 noexpandtab shiftwidth=4
 "swap prev buffer
 noremap <Tab> <C-^>
 
-inoremap <expr> <cr> pumvisible() ? "\<C-n>\<C-y>" : "\<cr>"
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
 
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
@@ -134,7 +137,7 @@ augroup vue
   au BufEnter *.vue call s:DetermineVueSyntax()
 augroup END
 
-noremap <c-s> :w<cr>:so %<cr>
+noremap <c-s> :w<cr>
 
 function! s:AfterAppend(when, after, append)
 	let l:line = search(a:when)
@@ -144,7 +147,7 @@ function! s:AfterAppend(when, after, append)
 	endif
 endfunction
 
-function! s:CreateVimComponent(name)
+function! s:CreateVueComponent(name)
 	call s:AfterAppend("<".a:name, "<template", "\t<" . a:name . " />")
 	call s:AfterAppend("import " . a:name, "<script", "import " . a:name . " from './" . a:name . "'")
 	call s:AfterAppend( "components:", "export default {", "\tcomponents: {\n\t}")
@@ -163,4 +166,4 @@ function! s:CreateVimComponent(name)
 	endif
 endfunction
 
-command! -nargs=+ VueComponent call s:CreateVimComponent(<q-args>)
+command! -nargs=+ VueComponent call s:CreateVueComponent(<q-args>)
