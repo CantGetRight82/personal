@@ -35,7 +35,7 @@ let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal 
 
 
 fu! TextEditComplete()
-	let l:line = z.cut')
+	let l:line = search('fz.cut')
 	if l:line > 0
 		execute "normal! x2dbdf|A "
 	endif
