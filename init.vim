@@ -16,6 +16,7 @@ Plug 'chase/vim-ansible-yaml'
 
 
 Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-buffer.vim'
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
@@ -27,11 +28,43 @@ let g:UltiSnipsListSnippets = "<c-d>"
 
 call plug#end()
 
-" let g:lsp_log_verbose = 1
-" let g:lsp_log_file = expand('~/vim-lsp.log')
-" let g:asyncomplete_log_file = expand('~/asyncomplete.log')
+let g:lsp_log_verbose = 1
+let g:lsp_log_file = expand('~/vim-lsp.log')
+let g:asyncomplete_log_file = expand('~/asyncomplete.log')
 let g:lsp_signs_enabled = 1         " enable signs
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+
+function! s:js_completor(opt, ctx) abort
+  let l:col = a:ctx['col']
+  let l:typed = a:ctx['typed']
+
+  let Omnifunc_ref = function(&omnifunc)
+  let l:startcol = Omnifunc_ref(1, '')
+  if l:startcol < 0
+    return
+  endif
+  if l:startcol > l:col
+    let l:startcol = l:col
+  endif
+
+  let l:matches = Omnifunc_ref(0, l:typed[l:startcol:l:col])
+
+  call asyncomplete#complete(a:opt['name'], a:ctx, l:startcol + 1, l:matches)
+endfunction
+
+au User asyncomplete_setup call asyncomplete#register_source({
+    \ 'name': 'javascript',
+    \ 'whitelist': ['javascript', 'css'],
+    \ 'priority': 5,
+    \ 'completor': function('s:js_completor'),
+    \ })
+
+call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
+    \ 'name': 'buffer',
+    \ 'whitelist': ['*'],
+    \ 'blacklist': ['go'],
+    \ 'completor': function('asyncomplete#sources#buffer#completor'),
+    \ }))
 
 
 fu! TextEditComplete()
@@ -46,13 +79,20 @@ augroup textEdit
 	autocmd CompleteDone * call TextEditComplete()
 augroup END
 
+" au User lsp_setup call lsp#register_server({
+"   \ 'name': 'vuel',
+"   \ 'cmd': { server_info->[&shell, &shellcmdflag, 'css-languageserver --stdio']},
+"   \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
+"   \ 'whitelist': ['css']
+"   \ })
 
-au User lsp_setup call lsp#register_server({
-  \ 'name': 'vuel',
-  \ 'cmd': { server_info->[&shell, &shellcmdflag, '/usr/local/bin/node ~/git/vuel']},
-  \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
-  \ 'whitelist': ['css']
-  \ })
+
+" au User lsp_setup call lsp#register_server({
+"   \ 'name': 'vuel',
+"   \ 'cmd': { server_info->[&shell, &shellcmdflag, '/usr/local/bin/node ~/git/vuel']},
+"   \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
+"   \ 'whitelist': ['css']
+"   \ })
 
 let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
 let $NVIM_NCM_LOG_LEVEL="DEBUG"
@@ -63,7 +103,7 @@ noremap <c-p> :Files<cr>
   " \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
 let g:rg_command = '
 \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
-\ -g "!{.git,node_modules,vendor}/*" '
+\ -g "!{.git,node_modules,vendor,bundles}/*" '
 command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
 
 
