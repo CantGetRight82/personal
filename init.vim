@@ -13,8 +13,6 @@ Plug 'tpope/vim-unimpaired'
 Plug 'chase/vim-ansible-yaml'
 
 
-
-
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-buffer.vim'
 Plug 'prabirshrestha/async.vim'
@@ -118,7 +116,7 @@ au FocusLost * :set norelativenumber
 au FocusGained * :set relativenumber
 
 set autoindent
-set tabstop=4 softtabstop=0 noexpandtab shiftwidth=4
+set tabstop=4 softtabstop=0 expandtab shiftwidth=4
 
 " -- Key mappings
 "swap prev buffer
@@ -189,10 +187,9 @@ function! s:AfterAppend(when, after, append)
 endfunction
 
 function! s:CreateVueComponent(name)
-	call s:AfterAppend("<".a:name, "<template", "\t<" . a:name . " />")
-	call s:AfterAppend("import " . a:name, "<script", "import " . a:name . " from './" . a:name . "'")
-	call s:AfterAppend( "components:", "export default {", "\tcomponents: {\n\t}")
-	call s:AfterAppend(a:name . ",", "components:", "\t" . a:name . ",")
+	call s:AfterAppend("import " . a:name, "<script", "import " . a:name . " from './" . a:name . "';")
+	call s:AfterAppend( "components:", "export default {", "    components: {\r    }")
+	call s:AfterAppend(a:name . ",", "components:", "        " . a:name . ",")
 
 	silent write
 	let l:filename = a:name .'.vue'

@@ -26,9 +26,20 @@ import $1 from './$1';
 endsnippet
 
 snippet da "data"
-data() { return {
-	$1
-}},
+data() {
+	return {
+		$1
+	},
+},
+endsnippet
+
+snippet mg "map getters"
+import { mapGetters } from 'vuex';
+computed: {
+	...mapGetters([
+		'$1',
+	]),
+},
 endsnippet
 
 snippet fu "function"
@@ -42,3 +53,4 @@ snippet rf "read file"
 const fs = require('fs');
 const str = fs.readFileSync('$1').toString();
 endsnippet
+
