@@ -12,85 +12,40 @@ Plug 'jremmen/vim-ripgrep'
 Plug 'tpope/vim-unimpaired'
 Plug 'chase/vim-ansible-yaml'
 
+" Plug 'posva/vim-vue'
 
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-buffer.vim'
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-cssomni'
+
+Plug 'easymotion/vim-easymotion'
+
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 
 Plug 'SirVer/ultisnips'
-let g:UltiSnipsSnippetDirectories = [ expand('~/personal/snips') ]
 let g:UltiSnipsExpandTrigger = "<c-e>"
 let g:UltiSnipsListSnippets = "<c-d>"
+let g:UltiSnipsSnippetDirectories = [ expand('~/personal/snips') ]
 
 call plug#end()
 
-let g:lsp_log_verbose = 1
-let g:lsp_log_file = expand('~/vim-lsp.log')
-let g:asyncomplete_log_file = expand('~/asyncomplete.log')
-let g:lsp_signs_enabled = 1         " enable signs
-let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
-
-function! s:js_completor(opt, ctx) abort
-  let l:col = a:ctx['col']
-  let l:typed = a:ctx['typed']
-
-  let Omnifunc_ref = function(&omnifunc)
-  let l:startcol = Omnifunc_ref(1, '')
-  if l:startcol < 0
-    return
-  endif
-  if l:startcol > l:col
-    let l:startcol = l:col
-  endif
-
-  let l:matches = Omnifunc_ref(0, l:typed[l:startcol:l:col])
-
-  call asyncomplete#complete(a:opt['name'], a:ctx, l:startcol + 1, l:matches)
-endfunction
-
-au User asyncomplete_setup call asyncomplete#register_source({
-    \ 'name': 'javascript',
-    \ 'whitelist': ['javascript', 'css'],
-    \ 'priority': 5,
-    \ 'completor': function('s:js_completor'),
-    \ })
-
-call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
-    \ 'name': 'buffer',
-    \ 'whitelist': ['*'],
-    \ 'blacklist': ['go'],
-    \ 'completor': function('asyncomplete#sources#buffer#completor'),
-    \ }))
+let g:LanguageClient_serverCommands = {
+    \ 'vue': [ 'vls' ],
+    \ 'javascript': [ 'vls' ],
+    \ 'css': [ 'vls' ]
+    \ }
+"
+" enable ncm2 for all buffers
+autocmd BufEnter * call ncm2#enable_for_buffer()
 
 
-fu! TextEditComplete()
-	let l:line = search('fz.cut')
-	if l:line > 0
-		execute "normal! x2dbdf|A "
-	endif
-endfu
+" IMPORTANTE: :help Ncm2PopupOpen for more information
+set completeopt=noinsert,menuone,noselect
 
-augroup textEdit
-	au!
-	autocmd CompleteDone * call TextEditComplete()
-augroup END
-
-" au User lsp_setup call lsp#register_server({
-"   \ 'name': 'vuel',
-"   \ 'cmd': { server_info->[&shell, &shellcmdflag, 'css-languageserver --stdio']},
-"   \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
-"   \ 'whitelist': ['css']
-"   \ })
-
-
-" au User lsp_setup call lsp#register_server({
-"   \ 'name': 'vuel',
-"   \ 'cmd': { server_info->[&shell, &shellcmdflag, '/usr/local/bin/node ~/git/vuel']},
-"   \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
-"   \ 'whitelist': ['css']
-"   \ })
 
 let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
 let $NVIM_NCM_LOG_LEVEL="DEBUG"
@@ -104,6 +59,7 @@ let g:rg_command = '
 \ -g "!{.git,node_modules,vendor,bundles}/*" '
 command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
 
+map <Leader> <Plug>(easymotion-prefix)
 
 " -- Colors
 set background=dark
@@ -121,6 +77,9 @@ set tabstop=4 softtabstop=0 expandtab shiftwidth=4
 " -- Key mappings
 "swap prev buffer
 noremap <Tab> <C-^>
+
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
