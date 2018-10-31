@@ -38,3 +38,10 @@ hyper('l', (win)=> {
 hyper('z', (win)=> {
 	slate.shell('/usr/bin/osascript /Users/rinke/apples/audiorecorder.scpt');
 });
+
+for(let i=1; i<12; i++) {
+    let key = 'f'+i;
+    slate.bind(key, () => {
+        slate.shell('/bin/sh /Users/rinke/personal/funkey.sh '+i);
+    });
+}
