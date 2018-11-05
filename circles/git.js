@@ -14,11 +14,10 @@ module.exports = (item) => [
         execSync('tmux send-keys "git log" ENTER');
     }),
 
-    item('git add -u', ({cwd}) => {
-        return 'Add changes in files that are already tracked';
+    item('git add .', ({cwd}) => {
+        return 'Stage changes';
     }, () => {
-        execSync('tmux send-keys "git add -u" ENTER');
-        execSync('tmux send-keys "git status" ENTER');
+        execSync('tmux send-keys "git add ." ENTER');
     }),
 
     item('git reset HEAD .', ({cwd}) => {
@@ -33,6 +32,12 @@ module.exports = (item) => [
         execSync('tmux send-keys "git commit -m "');
     }),
 
+    item('git fetch', ({cwd}) => {
+        return 'Fetch';
+    }, ({cwd}) => {
+        execSync('git fetch', {cwd});
+    }),
+
     item('git push', ({cwd}) => {
         return 'Push to remote';
     }, () => {
@@ -42,5 +47,20 @@ module.exports = (item) => [
         return 'Pull from remote';
     }, () => {
         execSync('tmux send-keys "git pull" ENTER');
+    }),
+    item('git diff', ({cwd}) => {
+        return execSync('git diff', { cwd }).toString();
+    }, () => {
+        execSync('tmux send-keys "git diff" ENTER');
+    }),
+    item('git stash', ({cwd}) => {
+        return 'Stash';
+    }, () => {
+        execSync('tmux send-keys "git stash" ENTER');
+    }),
+    item('git stash apply', ({cwd}) => {
+        return 'Apply stash';
+    }, () => {
+        execSync('tmux send-keys "git stash apply" ENTER');
     }),
 ];

@@ -135,7 +135,7 @@ augroup vue
   au BufEnter *.vue call s:DetermineVueSyntax()
 augroup END
 
-noremap <c-s> :w<cr>
+noremap <c-s> :w<cr>:call jobstart('sh reload.sh')<cr>
 
 function! s:AfterAppend(when, after, append)
 	let l:line = search(a:when)
