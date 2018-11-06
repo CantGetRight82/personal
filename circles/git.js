@@ -1,7 +1,7 @@
 const child_process = require('child_process');
 const { execSync } = child_process;
 
-module.exports = (item) => [
+module.exports = ({item, group}) => [
     item('git status', ({cwd}) => {
         return execSync('git status', { cwd }).toString();
     }, () => {
@@ -32,35 +32,21 @@ module.exports = (item) => [
         execSync('tmux send-keys "git commit -m "');
     }),
 
-    item('git fetch', ({cwd}) => {
-        return 'Fetch';
-    }, ({cwd}) => {
-        execSync('git fetch', {cwd});
-    }),
-
-    item('git push', ({cwd}) => {
-        return 'Push to remote';
-    }, () => {
-        execSync('tmux send-keys "git push" ENTER');
-    }),
-    item('git pull', ({cwd}) => {
-        return 'Pull from remote';
-    }, () => {
-        execSync('tmux send-keys "git pull" ENTER');
-    }),
     item('git diff', ({cwd}) => {
         return execSync('git diff', { cwd }).toString();
     }, () => {
         execSync('tmux send-keys "git diff" ENTER');
     }),
-    item('git stash', ({cwd}) => {
-        return 'Stash';
-    }, () => {
-        execSync('tmux send-keys "git stash" ENTER');
-    }),
-    item('git stash apply', ({cwd}) => {
-        return 'Apply stash';
-    }, () => {
-        execSync('tmux send-keys "git stash apply" ENTER');
-    }),
+
+    group([
+        item('git fetch'),
+        item('git push'),
+        item('git pull'),
+    ]),
+
+
+    group([
+        item('git stash'),
+        item('git stash apply'),
+    ])
 ];
