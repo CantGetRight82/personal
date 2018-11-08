@@ -14,29 +14,18 @@ module.exports = ({item, group}) => [
         execSync('tmux send-keys "git log" ENTER');
     }),
 
-    item('git add .', ({cwd}) => {
-        return 'Stage changes';
-    }, () => {
-        execSync('tmux send-keys "git add ." ENTER');
-    }),
-
-    item('git reset HEAD .', ({cwd}) => {
-        return 'Reset staging';
-    }, () => {
-        execSync('tmux send-keys "git reset HEAD ." ENTER');
-    }),
-
-    item('git commit -m', ({cwd}) => {
-        return 'Commit staged files';
-    }, () => {
-        execSync('tmux send-keys "git commit -m "');
-    }),
-
     item('git diff', ({cwd}) => {
         return execSync('git diff', { cwd }).toString();
     }, () => {
         execSync('tmux send-keys "git diff" ENTER');
     }),
+
+    group([
+        item('git add .'),
+        item('git commit -m {message}'),
+        item('git reset HEAD .'),
+    ]),
+
 
     group([
         item('git fetch'),
