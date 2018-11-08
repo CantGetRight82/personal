@@ -11,5 +11,16 @@ module.exports = ({item, group, cwd}) => {
 
     return [
         group( scripts),
+        group([
+            item('npm version'),
+            item('npm version major'),
+            item('npm version minor'),
+            item('npm version patch'),
+            item('npm publish'),
+        ]),
+        group([
+            item('npm ci'),
+            item('npm install'),
+        ]),
     ];
 }
