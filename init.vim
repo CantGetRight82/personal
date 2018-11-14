@@ -41,7 +41,13 @@ augroup END
 call writefile([ getpid() . '=' . v:servername ], '/Users/rinke/.nemote', 'a')
 
 
+function! StatuslineRemote()
+    return $NVIM_LISTEN_ADDRESS
+endfunction
 
+
+set statusline=
+set statusline+=%{StatuslineRemote()}
 let g:LanguageClient_serverCommands = {
     \ 'vue': [ 'vls' ],
     \ 'javascript': [ 'vls' ],

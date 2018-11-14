@@ -1,22 +1,17 @@
 const child_process = require('child_process');
 const { execSync } = child_process;
+const shell = require('hands/src/shell');
 
 module.exports = ({item, group}) => [
-    item('git status', ({cwd}) => {
-        return execSync('git status', { cwd }).toString();
-    }, () => {
+    item('git status', shell('git status', 'center'), () => {
         execSync('tmux send-keys "git status" ENTER');
     }),
 
-    item('git log', ({cwd}) => {
-        return execSync('git log -n 5', { cwd }).toString();
-    }, () => {
+    item('git log', shell('git log -n 5', 'center'), () => {
         execSync('tmux send-keys "git log" ENTER');
     }),
 
-    item('git diff', ({cwd}) => {
-        return execSync('git diff', { cwd }).toString();
-    }, () => {
+    item('git diff', shell('git diff', 'center'), () => {
         execSync('tmux send-keys "git diff" ENTER');
     }),
 

@@ -1,6 +1,6 @@
 snippet fe "forEach"
-arr.forEach( (obj) => {
-	$1
+$1.forEach( (obj) => {
+	$2
 });
 endsnippet
 
@@ -29,7 +29,7 @@ snippet da "data"
 data() {
 	return {
 		$1
-	},
+	};
 },
 endsnippet
 
@@ -54,3 +54,9 @@ const fs = require('fs');
 const str = fs.readFileSync('$1').toString();
 endsnippet
 
+
+snippet pr "promise"
+new Promise((ok,fail) => {
+	$1
+});
+endsnippet

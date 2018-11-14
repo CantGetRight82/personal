@@ -1,6 +1,10 @@
 
-module.exports = ({item, group}) => [
-    group([
-        item('sh stage.sh'),
-    ])
-];
+const { execSync } = require('child_process');
+
+module.exports = ({item, group}) => {
+    return [
+        item('docbrowser', null, () => {
+            execSync('tmux new-window -n docbrowser "cd ~/cafe/Optimum.Documentation && docbrowser"');
+        }),
+    ];
+}
