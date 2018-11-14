@@ -2,18 +2,15 @@ const child_process = require('child_process');
 const { execSync } = child_process;
 const shell = require('hands/src/shell');
 
+const openOutputFunc = (cmd) => () => {
+    execSync('tmux new-window "'+cmd+'; bash -i"');
+    return { action:'hide' }
+}
+
 module.exports = ({item, group}) => [
-    item('git status', shell('git status', 'center'), () => {
-        execSync('tmux send-keys "git status" ENTER');
-    }),
-
-    item('git log', shell('git log -n 5', 'center'), () => {
-        execSync('tmux send-keys "git log" ENTER');
-    }),
-
-    item('git diff', shell('git diff', 'center'), () => {
-        execSync('tmux send-keys "git diff" ENTER');
-    }),
+    item('git status', shell('git status', 'center'), openOutputFunc('git status') ),
+    item('git log', shell('git log -n 5', 'center'), openOutputFunc('git log') ),
+    item('git diff', shell('git diff', 'center'), openOutputFunc('git diff') ),
 
     group([
         item('git add .'),

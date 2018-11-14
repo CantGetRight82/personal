@@ -9,9 +9,8 @@ const snip = (name, snippet = null) => {
         snippet = name;
     }
     return item(name, () => snippet, () => {
-        // neovim.api.nvim_command('call UltiSnips#Anon("'+snippet+'")');
         neovim.api.nvim_command('call UltiSnips#ExpandSnippet()');
-        return 'HIDE';
+        return { action:'hide' };
     });
 
 }
@@ -36,22 +35,20 @@ const getSnippets = () => {
 
 
 
-
-
 module.exports = () => {
     return [
         ...getSnippets().map( snip => {
-            return item(snip.name, ()=>snip.snippet, ()=> {
+            return item(snip.name, ()=>snip.snippet.replace("\n","<br/>"), ()=> {
                 neovim.api.nvim_feedkeys(snip.code, 'insert', false);
                 neovim.api.nvim_command('call UltiSnips#ExpandSnippet()');
-                return 'HIDE';
+                return { action:'hide' };
             });
         }),
 
         group([
             item('Edit snips', () => 'Edit snips', ()=> {
                 neovim.api.nvim_command('UltiSnipsEdit');
-                return 'HIDE';
+                return { action:'hide' };
             }),
         ]),
     ];

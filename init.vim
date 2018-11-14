@@ -40,6 +40,7 @@ endfunction
 
 set statusline=
 set statusline+=%{StatuslineRemote()}
+set statusline+=\ %f
 let g:LanguageClient_serverCommands = {
     \ 'vue': [ 'vls' ],
     \ 'javascript': [ 'vls' ],
