@@ -34,17 +34,9 @@ let g:UltiSnipsSnippetDirectories = [ expand('~/personal/snips') ]
 call plug#end()
 
 
-augroup cleanup
-  au!
-  au VimLeave * echom('yo')
-augroup END
-call writefile([ getpid() . '=' . v:servername ], '/Users/rinke/.nemote', 'a')
-
-
 function! StatuslineRemote()
     return $NVIM_LISTEN_ADDRESS
 endfunction
-
 
 set statusline=
 set statusline+=%{StatuslineRemote()}
