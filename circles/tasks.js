@@ -14,6 +14,7 @@ module.exports = ({item, group, cwd}) => {
                 const [ ,id, elapsed, description ] = match;
                 return item(description, null, ()=> {
                     execSync('task '+id+' done');
+                    return 'HIDE';
                 });
             });
         }
