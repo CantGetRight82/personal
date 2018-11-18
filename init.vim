@@ -27,12 +27,14 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ }
 
 Plug 'SirVer/ultisnips'
+
 let g:UltiSnipsExpandTrigger = "<c-e>"
 let g:UltiSnipsListSnippets = "<c-d>"
 let g:UltiSnipsSnippetDirectories = [ expand('~/personal/snips') ]
 
 call plug#end()
 
+source /Users/rinke/hands/debug/debugger.vim
 
 function! StatuslineRemote()
     return $NVIM_LISTEN_ADDRESS

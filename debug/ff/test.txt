@@ -1,0 +1,349 @@
+{
+    "callFrames": [
+        {
+            "callFrameId": "{\"ordinal\":0,\"injectedScriptId\":1}",
+            "functionName": "main",
+            "functionLocation": {
+                "scriptId": "62",
+                "lineNumber": 3,
+                "columnNumber": 13
+            },
+            "location": {
+                "scriptId": "62",
+                "lineNumber": 6,
+                "columnNumber": 4
+            },
+            "url": "/Users/rinke/hands/debug/ff/index.js",
+            "scopeChain": [
+                {
+                    "type": "local",
+                    "object": {
+                        "type": "object",
+                        "className": "Object",
+                        "description": "Object",
+                        "objectId": "{\"injectedScriptId\":1,\"id\":434}"
+                    },
+                    "name": "main",
+                    "startLocation": {
+                        "scriptId": "62",
+                        "lineNumber": 3,
+                        "columnNumber": 13
+                    },
+                    "endLocation": {
+                        "scriptId": "62",
+                        "lineNumber": 11,
+                        "columnNumber": 1
+                    }
+                },
+                {
+                    "type": "closure",
+                    "object": {
+                        "type": "object",
+                        "className": "Object",
+                        "description": "Object",
+                        "objectId": "{\"injectedScriptId\":1,\"id\":435}"
+                    },
+                    "startLocation": {
+                        "scriptId": "62",
+                        "lineNumber": 0,
+                        "columnNumber": 10
+                    },
+                    "endLocation": {
+                        "scriptId": "62",
+                        "lineNumber": 16,
+                        "columnNumber": 1
+                    }
+                },
+                {
+                    "type": "global",
+                    "object": {
+                        "type": "object",
+                        "className": "global",
+                        "description": "global",
+                        "objectId": "{\"injectedScriptId\":1,\"id\":436}"
+                    }
+                }
+            ],
+            "this": {
+                "type": "undefined"
+            }
+        },
+        {
+            "callFrameId": "{\"ordinal\":1,\"injectedScriptId\":1}",
+            "functionName": "ontimeout",
+            "functionLocation": {
+                "scriptId": "50",
+                "lineNumber": 416,
+                "columnNumber": 18
+            },
+            "location": {
+                "scriptId": "50",
+                "lineNumber": 423,
+                "columnNumber": 10
+            },
+            "url": "timers.js",
+            "scopeChain": [
+                {
+                    "type": "local",
+                    "object": {
+                        "type": "object",
+                        "className": "Object",
+                        "description": "Object",
+                        "objectId": "{\"injectedScriptId\":1,\"id\":437}"
+                    },
+                    "name": "ontimeout",
+                    "startLocation": {
+                        "scriptId": "50",
+                        "lineNumber": 416,
+                        "columnNumber": 18
+                    },
+                    "endLocation": {
+                        "scriptId": "50",
+                        "lineNumber": 428,
+                        "columnNumber": 1
+                    }
+                },
+                {
+                    "type": "closure",
+                    "object": {
+                        "type": "object",
+                        "className": "Object",
+                        "description": "Object",
+                        "objectId": "{\"injectedScriptId\":1,\"id\":438}"
+                    },
+                    "startLocation": {
+                        "scriptId": "50",
+                        "lineNumber": 0,
+                        "columnNumber": 10
+                    },
+                    "endLocation": {
+                        "scriptId": "50",
+                        "lineNumber": 791,
+                        "columnNumber": 1
+                    }
+                },
+                {
+                    "type": "global",
+                    "object": {
+                        "type": "object",
+                        "className": "global",
+                        "description": "global",
+                        "objectId": "{\"injectedScriptId\":1,\"id\":439}"
+                    }
+                }
+            ],
+            "this": {
+                "type": "undefined"
+            }
+        },
+        {
+            "callFrameId": "{\"ordinal\":2,\"injectedScriptId\":1}",
+            "functionName": "tryOnTimeout",
+            "functionLocation": {
+                "scriptId": "50",
+                "lineNumber": 279,
+                "columnNumber": 21
+            },
+            "location": {
+                "scriptId": "50",
+                "lineNumber": 287,
+                "columnNumber": 4
+            },
+            "url": "timers.js",
+            "scopeChain": [
+                {
+                    "type": "local",
+                    "object": {
+                        "type": "object",
+                        "className": "Object",
+                        "description": "Object",
+                        "objectId": "{\"injectedScriptId\":1,\"id\":440}"
+                    },
+                    "name": "tryOnTimeout",
+                    "startLocation": {
+                        "scriptId": "50",
+                        "lineNumber": 279,
+                        "columnNumber": 21
+                    },
+                    "endLocation": {
+                        "scriptId": "50",
+                        "lineNumber": 300,
+                        "columnNumber": 1
+                    }
+                },
+                {
+                    "type": "closure",
+                    "object": {
+                        "type": "object",
+                        "className": "Object",
+                        "description": "Object",
+                        "objectId": "{\"injectedScriptId\":1,\"id\":441}"
+                    },
+                    "startLocation": {
+                        "scriptId": "50",
+                        "lineNumber": 0,
+                        "columnNumber": 10
+                    },
+                    "endLocation": {
+                        "scriptId": "50",
+                        "lineNumber": 791,
+                        "columnNumber": 1
+                    }
+                },
+                {
+                    "type": "global",
+                    "object": {
+                        "type": "object",
+                        "className": "global",
+                        "description": "global",
+                        "objectId": "{\"injectedScriptId\":1,\"id\":442}"
+                    }
+                }
+            ],
+            "this": {
+                "type": "undefined"
+            }
+        },
+        {
+            "callFrameId": "{\"ordinal\":3,\"injectedScriptId\":1}",
+            "functionName": "listOnTimeout",
+            "functionLocation": {
+                "scriptId": "50",
+                "lineNumber": 213,
+                "columnNumber": 22
+            },
+            "location": {
+                "scriptId": "50",
+                "lineNumber": 250,
+                "columnNumber": 4
+            },
+            "url": "timers.js",
+            "scopeChain": [
+                {
+                    "type": "local",
+                    "object": {
+                        "type": "object",
+                        "className": "Object",
+                        "description": "Object",
+                        "objectId": "{\"injectedScriptId\":1,\"id\":443}"
+                    },
+                    "name": "listOnTimeout",
+                    "startLocation": {
+                        "scriptId": "50",
+                        "lineNumber": 213,
+                        "columnNumber": 22
+                    },
+                    "endLocation": {
+                        "scriptId": "50",
+                        "lineNumber": 274,
+                        "columnNumber": 1
+                    }
+                },
+                {
+                    "type": "closure",
+                    "object": {
+                        "type": "object",
+                        "className": "Object",
+                        "description": "Object",
+                        "objectId": "{\"injectedScriptId\":1,\"id\":444}"
+                    },
+                    "startLocation": {
+                        "scriptId": "50",
+                        "lineNumber": 0,
+                        "columnNumber": 10
+                    },
+                    "endLocation": {
+                        "scriptId": "50",
+                        "lineNumber": 791,
+                        "columnNumber": 1
+                    }
+                },
+                {
+                    "type": "global",
+                    "object": {
+                        "type": "object",
+                        "className": "global",
+                        "description": "global",
+                        "objectId": "{\"injectedScriptId\":1,\"id\":445}"
+                    }
+                }
+            ],
+            "this": {
+                "type": "undefined"
+            }
+        },
+        {
+            "callFrameId": "{\"ordinal\":4,\"injectedScriptId\":1}",
+            "functionName": "processTimers",
+            "functionLocation": {
+                "scriptId": "50",
+                "lineNumber": 207,
+                "columnNumber": 22
+            },
+            "location": {
+                "scriptId": "50",
+                "lineNumber": 210,
+                "columnNumber": 9
+            },
+            "url": "timers.js",
+            "scopeChain": [
+                {
+                    "type": "local",
+                    "object": {
+                        "type": "object",
+                        "className": "Object",
+                        "description": "Object",
+                        "objectId": "{\"injectedScriptId\":1,\"id\":446}"
+                    },
+                    "name": "processTimers",
+                    "startLocation": {
+                        "scriptId": "50",
+                        "lineNumber": 207,
+                        "columnNumber": 22
+                    },
+                    "endLocation": {
+                        "scriptId": "50",
+                        "lineNumber": 211,
+                        "columnNumber": 1
+                    }
+                },
+                {
+                    "type": "closure",
+                    "object": {
+                        "type": "object",
+                        "className": "Object",
+                        "description": "Object",
+                        "objectId": "{\"injectedScriptId\":1,\"id\":447}"
+                    },
+                    "startLocation": {
+                        "scriptId": "50",
+                        "lineNumber": 0,
+                        "columnNumber": 10
+                    },
+                    "endLocation": {
+                        "scriptId": "50",
+                        "lineNumber": 791,
+                        "columnNumber": 1
+                    }
+                },
+                {
+                    "type": "global",
+                    "object": {
+                        "type": "object",
+                        "className": "global",
+                        "description": "global",
+                        "objectId": "{\"injectedScriptId\":1,\"id\":448}"
+                    }
+                }
+            ],
+            "this": {
+                "type": "object",
+                "className": "Timer",
+                "description": "Timer",
+                "objectId": "{\"injectedScriptId\":1,\"id\":449}"
+            }
+        }
+    ],
+    "reason": "other",
+    "hitBreakpoints": []
+}

@@ -10,6 +10,8 @@ try {
     const [,,command,...rest] = process.argv;
     const cmd = require('./src/cmd/'+command);
     const required = args(cmd);
+    if(required[0] == '') { required.pop(); }
+
     if(required.length != rest.length) {
         throw Error('Usage: vv '+command+' '+required.map(a => '{'+a+'}'));
     }
