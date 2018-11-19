@@ -10,10 +10,10 @@
             },
             "location": {
                 "scriptId": "62",
-                "lineNumber": 6,
+                "lineNumber": 7,
                 "columnNumber": 4
             },
-            "url": "/Users/rinke/hands/debug/ff/index.js",
+            "url": "/Users/rinke/personal/debug/ff/index.js",
             "scopeChain": [
                 {
                     "type": "local",
@@ -21,7 +21,7 @@
                         "type": "object",
                         "className": "Object",
                         "description": "Object",
-                        "objectId": "{\"injectedScriptId\":1,\"id\":434}"
+                        "objectId": "{\"injectedScriptId\":1,\"id\":65}"
                     },
                     "name": "main",
                     "startLocation": {
@@ -41,7 +41,7 @@
                         "type": "object",
                         "className": "Object",
                         "description": "Object",
-                        "objectId": "{\"injectedScriptId\":1,\"id\":435}"
+                        "objectId": "{\"injectedScriptId\":1,\"id\":66}"
                     },
                     "startLocation": {
                         "scriptId": "62",
@@ -60,7 +60,7 @@
                         "type": "object",
                         "className": "global",
                         "description": "global",
-                        "objectId": "{\"injectedScriptId\":1,\"id\":436}"
+                        "objectId": "{\"injectedScriptId\":1,\"id\":67}"
                     }
                 }
             ],
@@ -89,7 +89,7 @@
                         "type": "object",
                         "className": "Object",
                         "description": "Object",
-                        "objectId": "{\"injectedScriptId\":1,\"id\":437}"
+                        "objectId": "{\"injectedScriptId\":1,\"id\":68}"
                     },
                     "name": "ontimeout",
                     "startLocation": {
@@ -109,7 +109,7 @@
                         "type": "object",
                         "className": "Object",
                         "description": "Object",
-                        "objectId": "{\"injectedScriptId\":1,\"id\":438}"
+                        "objectId": "{\"injectedScriptId\":1,\"id\":69}"
                     },
                     "startLocation": {
                         "scriptId": "50",
@@ -128,7 +128,7 @@
                         "type": "object",
                         "className": "global",
                         "description": "global",
-                        "objectId": "{\"injectedScriptId\":1,\"id\":439}"
+                        "objectId": "{\"injectedScriptId\":1,\"id\":70}"
                     }
                 }
             ],
@@ -157,7 +157,7 @@
                         "type": "object",
                         "className": "Object",
                         "description": "Object",
-                        "objectId": "{\"injectedScriptId\":1,\"id\":440}"
+                        "objectId": "{\"injectedScriptId\":1,\"id\":71}"
                     },
                     "name": "tryOnTimeout",
                     "startLocation": {
@@ -177,7 +177,7 @@
                         "type": "object",
                         "className": "Object",
                         "description": "Object",
-                        "objectId": "{\"injectedScriptId\":1,\"id\":441}"
+                        "objectId": "{\"injectedScriptId\":1,\"id\":72}"
                     },
                     "startLocation": {
                         "scriptId": "50",
@@ -196,7 +196,7 @@
                         "type": "object",
                         "className": "global",
                         "description": "global",
-                        "objectId": "{\"injectedScriptId\":1,\"id\":442}"
+                        "objectId": "{\"injectedScriptId\":1,\"id\":73}"
                     }
                 }
             ],
@@ -225,7 +225,7 @@
                         "type": "object",
                         "className": "Object",
                         "description": "Object",
-                        "objectId": "{\"injectedScriptId\":1,\"id\":443}"
+                        "objectId": "{\"injectedScriptId\":1,\"id\":74}"
                     },
                     "name": "listOnTimeout",
                     "startLocation": {
@@ -245,7 +245,7 @@
                         "type": "object",
                         "className": "Object",
                         "description": "Object",
-                        "objectId": "{\"injectedScriptId\":1,\"id\":444}"
+                        "objectId": "{\"injectedScriptId\":1,\"id\":75}"
                     },
                     "startLocation": {
                         "scriptId": "50",
@@ -264,7 +264,7 @@
                         "type": "object",
                         "className": "global",
                         "description": "global",
-                        "objectId": "{\"injectedScriptId\":1,\"id\":445}"
+                        "objectId": "{\"injectedScriptId\":1,\"id\":76}"
                     }
                 }
             ],
@@ -293,7 +293,7 @@
                         "type": "object",
                         "className": "Object",
                         "description": "Object",
-                        "objectId": "{\"injectedScriptId\":1,\"id\":446}"
+                        "objectId": "{\"injectedScriptId\":1,\"id\":77}"
                     },
                     "name": "processTimers",
                     "startLocation": {
@@ -313,7 +313,7 @@
                         "type": "object",
                         "className": "Object",
                         "description": "Object",
-                        "objectId": "{\"injectedScriptId\":1,\"id\":447}"
+                        "objectId": "{\"injectedScriptId\":1,\"id\":78}"
                     },
                     "startLocation": {
                         "scriptId": "50",
@@ -332,7 +332,7 @@
                         "type": "object",
                         "className": "global",
                         "description": "global",
-                        "objectId": "{\"injectedScriptId\":1,\"id\":448}"
+                        "objectId": "{\"injectedScriptId\":1,\"id\":79}"
                     }
                 }
             ],
@@ -340,7 +340,7 @@
                 "type": "object",
                 "className": "Timer",
                 "description": "Timer",
-                "objectId": "{\"injectedScriptId\":1,\"id\":449}"
+                "objectId": "{\"injectedScriptId\":1,\"id\":80}"
             }
         }
     ],

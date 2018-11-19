@@ -101,8 +101,8 @@ noremap ≥ :call DeeStepOver()<cr>
 noremap ∫ :call DeeToggleBreak()<cr>
 " w
 noremap ∑ :call DeeWeb()<cr>
-" n
-noremap ˜ :call DeeNode()<cr>
+" ø
+noremap ø :call DeeNode()<cr>
 " q
 noremap œ :call DeeStop()<cr>
 " v

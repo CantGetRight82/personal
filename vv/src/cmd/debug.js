@@ -6,7 +6,7 @@ const { SourceMapConsumer }  = require('source-map');
 
 const log = (obj) => {
     const str = JSON.stringify(obj,null,4);
-    fs.appendFile('/Users/rinke/hands/debug/log', str+"\n", ()=> {
+    fs.appendFile('/Users/rinke/debuglog', str+"\n", ()=> {
     });
 }
 
