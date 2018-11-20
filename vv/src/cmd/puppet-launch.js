@@ -47,6 +47,10 @@ const goto = async(url) => {
     arr[activeTabIndex].goto(url);
 }
 
+const clearEmulation = (page) => {
+    page._client.send('Emulation.clearDeviceMetricsOverride');
+}
+
 const actions = {
     newTab,
     nextTab,
@@ -65,6 +69,10 @@ module.exports = async() => {
         ],
     });
     log.info('started');
+
+    const arr = await browser.pages();
+    clearEmulation(arr[0]);
+
 
     const rl = readline.createInterface({
         input: process.stdin,
