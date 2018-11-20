@@ -16,11 +16,3 @@ function testMux {
 # tmux send-keys -t .1 "vv puppeteer" ENTER
 tmux send-keys -t .2 c-c
 tmux send-keys -t .2 "vv puppet-mux" ENTER
-
-sleep 1
-vv puppet nextTab
-
-sleep 1
-vv puppet nextTab
-sleep 1
-vv puppet nextTab
