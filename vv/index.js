@@ -11,7 +11,7 @@ try {
     const cmd = require('./src/cmd/'+command);
     const required = args(cmd);
     if(required[0] == '') { required.pop(); }
-
+    if(required[0] == 'async()') { required.pop(); }
     if(required.length != rest.length) {
         throw Error('Usage: vv '+command+' '+required.map(a => '{'+a+'}'));
     }

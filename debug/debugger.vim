@@ -3,31 +3,46 @@ set noswapfile
 
 let s:job = 0
 let s:breaks = {}
-let s:signId = 1
+let s:signId = 2
 let s:callFrameId = 0
-
 let s:adaptNode = 0
+
+sign define deeBreak text=🍔 texthl=SignColumn
+sign define deeLine text=> texthl=Black
 
 function! DeeSignal()
     let ff = system('vv signal-node-debug')
 endfunction
 
-function! DeeNode()
-    let s:job = jobstart(['vv', 'debug', '9229', '0' ], extend({'shell': 'debug'}, s:callbacks))
-    let s:adaptNode = 1
+
+function! DeeTargetSink(line)
+    let parts = split(a:line)
+    let port = parts[0]
+    if port == '9229'
+        let s:adaptNode = 1
+    else
+        let s:adaptNode = 0
+    endif
+    let s:job = jobstart(['vv', 'debug', parts[0], parts[2] ], extend({'shell': 'debug'}, s:callbacks))
+
 endfunction
 
-function! DeeWeb()
-    let s:job = jobstart(['vv', 'debug', '9222', '0' ], extend({'shell': 'debug'}, s:callbacks))
+function! DeeTargets()
+    let arr = json_decode( system('vv debug-targets') )
+    call fzf#run({'source': arr, 'sink': function("DeeTargetSink") })
 endfunction
 
 function! DeeStop()
+    let arr = values(s:breaks)
+    exe ":sign unplace 1"
+    for obj in arr
+        exe ":sign unplace " . obj.id
+    endfor
+
     let s:breaks = {}
     call jobstop(s:job)
 endfunction
 
-
-sign define deeBreak text=🍔 texthl=SignColumn
 
 function! s:sendAction(action,object)
     let obj = a:object
@@ -52,7 +67,6 @@ endfunction
 function! DeeUnsetBreak(url, line)
     let combo = a:url . ':'. a:line
     let obj = s:breaks[combo]
-    let id = obj.id
     exe ":sign unplace " . obj.id
     unlet s:breaks[combo]
     call s:sendAction('unbreak', obj )
@@ -69,7 +83,7 @@ function! DeeBreak(line)
 endfunction
 
 function! DeeTogglePause()
-    set nocursorline
+    exe ":sign unplace 1"
     call s:sendAction('toggle', {} )
 endfunction
 
@@ -93,16 +107,20 @@ function! DeeVee(expression)
     call s:sendAction('eval', obj)
 endfunction
 
+function! DeePreview(str)
+    let file = tempname()
+    call writefile(split(a:str, "\n", 1), file, 'b')
+	exe ":pedit " . file
+endfunction
+
+" d
+noremap ∂ :call DeeTargets()<cr>
 " p
 noremap π :call DeeTogglePause()<cr>
 " .
 noremap ≥ :call DeeStepOver()<cr>
 " b
 noremap ∫ :call DeeToggleBreak()<cr>
-" w
-noremap ∑ :call DeeWeb()<cr>
-" ø
-noremap ø :call DeeNode()<cr>
 " q
 noremap œ :call DeeStop()<cr>
 " v
@@ -116,20 +134,24 @@ function! s:OnEvent(job_id, data, event) dict
             let json = join(a:data)
             let obj = json_decode(json)
 
-            set cursorline
-            exe "e ".obj.url
-
-            let s:callFrameId = obj.callFrameId
-
-            let loc = obj.location
-            call cursor(loc.lineNumber, loc.columnNumber)
+            if obj.event == 'paused'
+                exe "e ".obj.url
+                let s:callFrameId = obj.callFrameId
+                let loc = obj.location
+                let line = loc.lineNumber + s:adaptNode
+                call cursor(line, loc.columnNumber)
+                exe ":sign unplace 1"
+                exe ":sign place 1 line=".line." name=deeLine file=".obj.url
+            else
+                call DeePreview( obj.result )
+            endif
         endif
     elseif a:event == 'stderr'
         let str = 'e: '.join(a:data)
         echom str
     else
         let str = self.shell.' exited'
-        " echo str
+        echo str
     endif
 endfunction
 

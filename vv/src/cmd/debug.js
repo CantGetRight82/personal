@@ -4,56 +4,57 @@ const CDP = require('chrome-remote-interface');
 const fs = require('fs');
 const { SourceMapConsumer }  = require('source-map');
 
-const log = (obj) => {
-    const str = JSON.stringify(obj,null,4);
-    fs.appendFile('/Users/rinke/debuglog', str+"\n", ()=> {
-    });
-}
+const log = require('../logger');
+const Source = require('../source');
 
 let paused = false;
 let client;
 
 const sources = [];
-class Source {
-    constructor(url,hash) {
-        this.url = url;
-        this.hash = hash;
-        this.path = getScriptPath(url);
-    }
-};
-
-const getScriptPath = (url) => {
-    if(url.indexOf('?vue&type=script') !== -1) {
-        const match = url.match(/!\.\/([^?]+)\?vue&type/);
-        return match[1];
-    }
-
-    return url.replace( process.cwd()+'/', '');
+const getSource = (path) => {
+    return sources.find( s => s.path == path );
 }
 
-
-const main = async(port, index) => {
+const main = async(port, id) => {
     try {
         client = await CDP({
             port: port,
-            target: (list) => {
-                return list[index];
-            },
+            target: id,
         });
 
+        log.info('connected');
+
         const {Debugger} = client;
-        Debugger.paused( (obj) => {
+        Debugger.paused( async(obj) => {
             paused = true;
-            fs.writeFile('test.txt',
-                JSON.stringify(obj,null,4), ()=> {
-            })
+
             const firstFrame = obj.callFrames[0];
             let { url, location } = firstFrame;
-            location.lineNumber++;
 
+            let path = Source.getScriptPath(url);
+            fs.writeFile('/Users/rinke/pauses/'+path.replace(/\//,'-'),
+                JSON.stringify(obj,null,4), ()=> {
+            })
+
+            // const scriptSource = await Debugger.getScriptSource({
+            //     scriptId:location.scriptId
+            // });
+            // log.info(scriptSource);
+
+            let source = getSource(path);
+            if(source.sourceMap) {
+                let loc = await source.getOriginal(
+                    location.lineNumber,
+                    location.columnNumber,
+                );
+                location.lineNumber = loc.line;
+                location.columnNumber = loc.column;
+            }
+
+            // location.lineNumber++;
             console.log( JSON.stringify( {
                 event:'paused',
-                url:getScriptPath(url),
+                url:path,
                 location,
                 callFrameId:firstFrame.callFrameId,
             }));
@@ -62,14 +63,10 @@ const main = async(port, index) => {
         Debugger.scriptParsed( async(obj) => {
             const { sourceMapURL } = obj;
             let idx = sourceMapURL.indexOf(',')
-            log(obj);
             if(idx !== -1) {
                 const base64 = sourceMapURL.substr(idx+1);
                 const script = JSON.parse(Buffer.from(base64, 'base64'));
-                if(script.file.indexOf('App.vue?vue&type=script') !== -1) {
-                    log(script);
-                }
-                sources.push( new Source(script.file, obj.hash) );
+                sources.push( new Source(script.file, obj.hash,script) );
             } else {
                 sources.push( new Source(obj.url, obj.hash) );
             }
@@ -105,30 +102,32 @@ const breaks = {
 };
 
 const actions = {
-    'break': (obj) => {
-        let source = sources.find( s => s.path == obj.url );
+    'break': async(obj) => {
+        const key = combo(obj)
+        let source = getSource(obj.url);
         if(!source) {
             console.error('cant locate: ', obj.url);
+            log.error('cant locate: ', obj.url);
             return;
         }
-        log(source);
 
+        if(source.sourceMap) {
+            let loc = await source.getGenerated(obj.line);
+            obj.line = loc.line;
+        }
         client.Debugger.setBreakpointByUrl({
-            // url: 'http://localhost:8080/'+obj.url,
             scriptHash: source.hash,
-            // url: special,
             lineNumber: obj.line,
         }).then( (result) => {
-            breaks[combo(obj)] = result;
-            log(result);
+            breaks[key] = result;
+            log.info(result);
         })
     },
     'unbreak': (obj) => {
         const key = combo(obj)
-        console.error(key);
         const { breakpointId } = breaks[key];
-        log( { key } );
-        log( { breakpointId } );
+        log.info( { key } );
+        log.info( { breakpointId } );
         client.Debugger.removeBreakpoint({
             breakpointId,
         });
@@ -155,7 +154,12 @@ const actions = {
             callFrameId,
             expression,
         }).then( (res) => {
-            console.error( res.result.description );
+            log.error(res);
+            console.log(JSON.stringify( {
+                event:'eval',
+                result: expression + "\n" +JSON.stringify(res.result,null,4),
+            }));
+            // console.error( res.result );
         })
     },
 }
