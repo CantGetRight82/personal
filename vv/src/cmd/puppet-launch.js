@@ -23,6 +23,7 @@ const nextTab = async() => {
 }
 const newTab = async() => {
     const page = await browser.newPage();
+    clearEmulation(page);
     const arr = await browser.pages();
     activeTabIndex = arr.indexOf(page);
 }
@@ -40,6 +41,9 @@ const moveTab = async(dir) => {
 const closeTab = async() => {
     const arr = await browser.pages();
     arr[activeTabIndex].close();
+    if(activeTabIndex == arr.length-1) {
+        activeTabIndex--;
+    }
 }
 
 const goto = async(url) => {
@@ -47,15 +51,28 @@ const goto = async(url) => {
     arr[activeTabIndex].goto(url);
 }
 
+const back = async() => {
+    const arr = await browser.pages();
+    arr[activeTabIndex].goBack();
+}
+
+const forward = async() => {
+    const arr = await browser.pages();
+    arr[activeTabIndex].goForward();
+}
+
 const clearEmulation = (page) => {
     page._client.send('Emulation.clearDeviceMetricsOverride');
 }
+
 
 const actions = {
     newTab,
     nextTab,
     closeTab,
     goto,
+    back,
+    forward,
 }
 
 

@@ -15,6 +15,10 @@ const getSource = (path) => {
     return sources.find( s => s.path == path );
 }
 
+const jsGetClickables = `
+[...document.querySelectorAll('*')].filter(e => getEventListeners(e).click)
+`;
+
 const main = async(port, id) => {
     try {
         client = await CDP({
@@ -24,7 +28,7 @@ const main = async(port, id) => {
 
         log.info('connected');
 
-        const {Debugger} = client;
+        const {Debugger, Runtime} = client;
         Debugger.paused( async(obj) => {
             paused = true;
 
@@ -32,15 +36,6 @@ const main = async(port, id) => {
             let { url, location } = firstFrame;
 
             let path = Source.getScriptPath(url);
-            fs.writeFile('/Users/rinke/pauses/'+path.replace(/\//,'-'),
-                JSON.stringify(obj,null,4), ()=> {
-            })
-
-            // const scriptSource = await Debugger.getScriptSource({
-            //     scriptId:location.scriptId
-            // });
-            // log.info(scriptSource);
-
             let source = getSource(path);
             if(source.sourceMap) {
                 let loc = await source.getOriginal(
@@ -51,7 +46,6 @@ const main = async(port, id) => {
                 location.columnNumber = loc.column;
             }
 
-            // location.lineNumber++;
             console.log( JSON.stringify( {
                 event:'paused',
                 url:path,
@@ -74,6 +68,7 @@ const main = async(port, id) => {
 
 
         await Debugger.enable();
+        await Runtime.enable();
         console.error('enabled');
     } catch (err) {
         console.error(err);
@@ -148,19 +143,44 @@ const actions = {
         client.Debugger.stepOver();
     },
 
-    'eval': (obj) => {
+    'frame-eval': (obj) => {
         const { callFrameId, expression } = obj;
         client.Debugger.evaluateOnCallFrame({
             callFrameId,
             expression,
         }).then( (res) => {
-            log.error(res);
             console.log(JSON.stringify( {
                 event:'eval',
                 result: expression + "\n" +JSON.stringify(res.result,null,4),
             }));
-            // console.error( res.result );
         })
+    },
+    'collect-links': async() => {
+        const res = await client.Runtime.evaluate({
+            expression: `
+                [
+                    ...${jsGetClickables}.map( (e,i) => {
+                            let desc = e.localName;
+                            if(e.className) { desc += '.'+e.className }
+                            if(e.innerText.length) { desc += ' '+e.innerText.substr(0,40); }
+                            return 'c['+i+']:'+desc;
+                        }),
+                    ...[...document.querySelectorAll('a')].map(a => a.href),
+                ]
+            `,
+            includeCommandLineAPI: true,
+            returnByValue: true,
+        });
+        console.log(JSON.stringify( {
+            event:'links',
+            result: res.result.value,
+        }));
+    },
+    'click-index': async(obj) => {
+        client.Runtime.evaluate({
+            expression:`${jsGetClickables}[${obj.index}].click()`,
+            includeCommandLineAPI: true,
+        });
     },
 }
 

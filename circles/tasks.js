@@ -22,7 +22,9 @@ module.exports = ({item, group, cwd}) => {
     }
     return [
         ...todo,
-        item('task add {description}'),
+        group([
+            item('task add {description}'),
+        ]),
     ];
 }
 

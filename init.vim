@@ -34,7 +34,8 @@ let g:UltiSnipsSnippetDirectories = [ expand('~/personal/snips') ]
 
 call plug#end()
 
-source ~/personal/debug/debugger.vim
+source ~/personal/devtools.vim
+source ~/personal/puppet.vim
 
 function! StatuslineRemote()
     return $NVIM_LISTEN_ADDRESS
