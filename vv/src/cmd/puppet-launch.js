@@ -61,6 +61,11 @@ const forward = async() => {
     arr[activeTabIndex].goForward();
 }
 
+const reload = async() => {
+    const arr = await browser.pages();
+    arr[activeTabIndex].reload();
+}
+
 const clearEmulation = (page) => {
     page._client.send('Emulation.clearDeviceMetricsOverride');
 }
@@ -73,12 +78,14 @@ const actions = {
     goto,
     back,
     forward,
+    reload,
 }
 
 
 module.exports = async() => {
     browser = await puppeteer.launch({
         executablePath:require('chrome-location'),
+        // executablePath: '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary',
         headless: false,
         args: [
             '--remote-debugging-port=9222',

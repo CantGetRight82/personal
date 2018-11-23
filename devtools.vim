@@ -1,6 +1,7 @@
 
 set noswapfile
 
+
 let s:job = 0
 let s:breaks = {}
 let s:signId = 2
@@ -11,7 +12,7 @@ sign define deeBreak text=🍔 texthl=SignColumn
 sign define deeLine text=> texthl=Black
 
 function! DeeSignal()
-    let ff = system('vv signal-node-debug')
+    system('vv signal-node')
 endfunction
 
 
@@ -39,18 +40,14 @@ endfunction
 function! DeeLinkSink(line)
     if a:line[0] == 'c'
         let index = a:line[2]
-        call s:sendAction('click-index', { 'index': index })
+        call DeeAction('click-index', { 'index': index })
     else
         call PuppetGo(a:line)
     endif
 endfunction
 
-function! DeeLinks2()
-    call s:sendAction('click-index', { 'index': 0 })
-endfunction
-
 function! DeeLinks()
-    call s:sendAction('collect-links', {})
+    call DeeAction('collect-links', {})
 endfunction
 
 function! DeeStop()
@@ -64,14 +61,12 @@ function! DeeStop()
     call jobstop(s:job)
 endfunction
 
-
-function! s:sendAction(action,object)
+function! DeeAction(action,object)
     let obj = a:object
     let obj.action =  a:action
     let str = json_encode(a:object ) . "\r"
     call chansend(s:job, [ str ])
 endfunction
-
 
 function! DeeSetBreak(url, line)
     let combo = a:url . ':'. a:line
@@ -82,7 +77,7 @@ function! DeeSetBreak(url, line)
     let l = a:line-s:adaptNode
     let obj = { 'url': a:url, 'line': l, 'id':id }
     let s:breaks[combo] = obj
-    call s:sendAction('break', obj )
+    call DeeAction('break', obj )
 endfunction
 
 function! DeeUnsetBreak(url, line)
@@ -90,7 +85,7 @@ function! DeeUnsetBreak(url, line)
     let obj = s:breaks[combo]
     exe ":sign unplace " . obj.id
     unlet s:breaks[combo]
-    call s:sendAction('unbreak', obj )
+    call DeeAction('unbreak', obj )
 endfunction
 
 function! DeeIsBreak(url, line)
@@ -105,11 +100,11 @@ endfunction
 
 function! DeeTogglePause()
     exe ":sign unplace 1"
-    call s:sendAction('toggle', {} )
+    call DeeAction('toggle', {} )
 endfunction
 
 function! DeeStepOver()
-    call s:sendAction('step-over', {} )
+    call DeeAction('step-over', {} )
 endfunction
 
 function! DeeToggleBreak()
@@ -125,13 +120,9 @@ endfunction
 
 function! DeeFrame(expression)
     let obj = { 'callFrameId': s:callFrameId, 'expression': a:expression }
-    call s:sendAction('frame-eval', obj)
+    call DeeAction('frame-eval', obj)
 endfunction
 
-function! DeeVee(expression)
-    let obj = { 'expression': a:expression }
-    call s:sendAction('eval', obj)
-endfunction
 
 function! DeePreview(str)
     let file = tempname()
@@ -159,26 +150,52 @@ noremap ¬ :call DeeLinks()<cr>
 command -nargs=1 DeeFrame call DeeFrame('<args>')
 command -nargs=1 DeeVee call DeeVee('<args>')
 
+let s:jsonData = ''
+function! s:CollectJSON(data)
+    let s:jsonData = s:jsonData . join(a:data)
+    echom "cata: ". len(s:jsonData)
+    let idx = 0
+    while idx != -1
+        let idx = match(s:jsonData,"}",idx+1)
+        try
+            let obj = json_decode(s:jsonData[:idx])
+            let s:jsonData = s:jsonData[idx+1:]
+            return obj
+        catch /.*/
+            " call DeePreview(v:exception)
+            echom "fail: ". len(s:jsonData)
+        finally
+        endtry
+    endwhile
+    return {}
+endfunction
+
+
+function! DeeOnPaused(obj)
+    let obj = a:obj
+    exe "e ".obj.url
+    let s:callFrameId = obj.callFrameId
+    let loc = obj.location
+    let line = loc.lineNumber + s:adaptNode
+    call cursor(line, loc.columnNumber)
+    exe ":sign unplace 1"
+    exe ":sign place 1 line=".line." name=deeLine file=".obj.url
+endfunction
+
+function! DeeOnLinks(obj)
+    call fzf#run({'source': a:obj.result, 'sink': function("DeeLinkSink") })
+    call feedkeys("\<esc>")
+endfunction
+
+
+
+
 function! s:OnEvent(job_id, data, event) dict
     if a:event == 'stdout'
-        if  a:data[0][0] == '{'
-            let json = join(a:data)
-            let obj = json_decode(json)
-
-            if obj.event == 'paused'
-                exe "e ".obj.url
-                let s:callFrameId = obj.callFrameId
-                let loc = obj.location
-                let line = loc.lineNumber + s:adaptNode
-                call cursor(line, loc.columnNumber)
-                exe ":sign unplace 1"
-                exe ":sign place 1 line=".line." name=deeLine file=".obj.url
-            elseif obj.event == 'links'
-                call fzf#run({'source': obj.result, 'sink': function("DeeLinkSink") })
-                call feedkeys("\<esc>")
-            else
-                call DeePreview( obj.result )
-            endif
+        let obj = s:CollectJSON(a:data)
+        if obj != {}
+            let Func = function("DeeOn" . obj.event)
+            call Func( obj )
         endif
     elseif a:event == 'stderr'
         let str = 'e: '.join(a:data)

@@ -7,6 +7,8 @@ noremap <leader>. :call PuppetNext()<cr>
 noremap “ :call PuppetBack()<cr>
 " alt ]
 noremap ‘ :call PuppetForward()<cr>
+" alt å
+noremap å :call PuppetReload()<cr>
 
 
 function! PuppetGo(url)
@@ -39,4 +41,8 @@ endfunction
 
 function! PuppetForward()
     call system('vv puppet forward')
+endfunction
+
+function! PuppetReload()
+    call system('vv puppet reload')
 endfunction

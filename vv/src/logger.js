@@ -12,5 +12,8 @@ process.on('uncaughtException', function(err) {
     log.error(err);
 });
 
+process.on('unhandledRejection', err => {
+    log.error(err);
+});
 
 module.exports = log;

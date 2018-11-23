@@ -6,6 +6,8 @@ const { SourceMapConsumer }  = require('source-map');
 
 const log = require('../logger');
 const Source = require('../source');
+const JSON5 = require('json5');
+
 
 let paused = false;
 let client;
@@ -19,6 +21,13 @@ const jsGetClickables = `
 [...document.querySelectorAll('*')].filter(e => getEventListeners(e).click)
 `;
 
+const logEvent = (event, obj) => {
+    let name = event.replace(/^[a-z]/, a => a.toUpperCase() );
+    console.log( 
+        JSON.stringify( Object.assign({ event:name }, obj) )
+    );
+}
+
 const main = async(port, id) => {
     try {
         client = await CDP({
@@ -28,7 +37,13 @@ const main = async(port, id) => {
 
         log.info('connected');
 
-        const {Debugger, Runtime} = client;
+        const {Debugger, Runtime, Log} = client;
+        Log.entryAdded( (entry) => {
+            logEvent('logEntry', entry);
+        });
+        Runtime.consoleAPICalled( (obj) => {
+            logEvent('logCall', obj);
+        });
         Debugger.paused( async(obj) => {
             paused = true;
 
@@ -46,12 +61,11 @@ const main = async(port, id) => {
                 location.columnNumber = loc.column;
             }
 
-            console.log( JSON.stringify( {
-                event:'paused',
+            logEvent('paused', {
                 url:path,
                 location,
                 callFrameId:firstFrame.callFrameId,
-            }));
+            });
         });
 
         Debugger.scriptParsed( async(obj) => {
@@ -69,6 +83,7 @@ const main = async(port, id) => {
 
         await Debugger.enable();
         await Runtime.enable();
+        await Log.enable();
         console.error('enabled');
     } catch (err) {
         console.error(err);
@@ -149,10 +164,17 @@ const actions = {
             callFrameId,
             expression,
         }).then( (res) => {
-            console.log(JSON.stringify( {
-                event:'eval',
-                result: expression + "\n" +JSON.stringify(res.result,null,4),
-            }));
+            logEvent('frameResult', { result: expression + "\n" +JSON.stringify(res.result,null,4) });
+        })
+    },
+    'eval': (obj) => {
+        const { expression } = obj;
+        client.Runtime.evaluate({
+            expression,
+            includeCommandLineAPI:true,
+            returnByValue:true,
+        }).then( (res) => {
+            logEvent('evalResult', { description:JSON5.stringify(res.result.value,null,4) });
         })
     },
     'collect-links': async() => {
@@ -171,10 +193,7 @@ const actions = {
             includeCommandLineAPI: true,
             returnByValue: true,
         });
-        console.log(JSON.stringify( {
-            event:'links',
-            result: res.result.value,
-        }));
+        logEvent('links', { result: res.result.value });
     },
     'click-index': async(obj) => {
         client.Runtime.evaluate({

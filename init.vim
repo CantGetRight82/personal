@@ -35,15 +35,9 @@ let g:UltiSnipsSnippetDirectories = [ expand('~/personal/snips') ]
 call plug#end()
 
 source ~/personal/devtools.vim
+source ~/personal/dev-log.vim
 source ~/personal/puppet.vim
 
-function! StatuslineRemote()
-    return $NVIM_LISTEN_ADDRESS
-endfunction
-
-set statusline=
-set statusline+=%{StatuslineRemote()}
-set statusline+=\ %f
 let g:LanguageClient_serverCommands = {
     \ 'vue': [ 'vls' ],
     \ 'javascript': [ 'vls' ],
