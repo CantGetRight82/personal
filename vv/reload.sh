@@ -19,4 +19,4 @@ function testMux {
 
 
 
-tmux send-keys -t .1 "node emoji.js" ENTER
+tmux send-keys -t .1 "vv deps | dot -T svg > test.svg" ENTER
