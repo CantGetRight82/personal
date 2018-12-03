@@ -194,6 +194,7 @@ function! s:OnEvent(job_id, data, event) dict
     if a:event == 'stdout'
         let obj = s:CollectJSON(a:data)
         if obj != {}
+
             let Func = function("DeeOn" . obj.event)
             call Func( obj )
         endif

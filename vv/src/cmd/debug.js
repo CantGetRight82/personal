@@ -38,12 +38,12 @@ const main = async(port, id) => {
         log.info('connected');
 
         const {Debugger, Runtime, Log} = client;
-        Log.entryAdded( (entry) => {
-            logEvent('logEntry', entry);
-        });
-        Runtime.consoleAPICalled( (obj) => {
-            logEvent('logCall', obj);
-        });
+        // Log.entryAdded( (entry) => {
+        //     logEvent('logEntry', entry);
+        // });
+        // Runtime.consoleAPICalled( (obj) => {
+        //     logEvent('logCall', obj);
+        // });
         Debugger.paused( async(obj) => {
             paused = true;
 
@@ -184,7 +184,7 @@ const actions = {
                     ...${jsGetClickables}.map( (e,i) => {
                             let desc = e.localName;
                             if(e.className) { desc += '.'+e.className }
-                            if(e.innerText.length) { desc += ' '+e.innerText.substr(0,40); }
+                            if(e.innerText && e.innerText.length) { desc += ' '+e.innerText.substr(0,40); }
                             return 'c['+i+']:'+desc;
                         }),
                     ...[...document.querySelectorAll('a')].map(a => a.href),
