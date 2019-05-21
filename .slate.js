@@ -36,6 +36,6 @@ hyper('l', (win)=> {
 });
 
 hyper('z', (win)=> {
-	slate.shell('/usr/bin/osascript /Users/rinke/apples/audiorecorder.scpt');
+	slate.shell('/usr/bin/osascript /Users/rinke/apples/term-vs-devtools.js');
 });
 
