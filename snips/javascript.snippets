@@ -48,10 +48,16 @@ computed: {
 },
 endsnippet
 
-snippet fu "function"
-function $1() {
+snippet af "arrow function"
+async($1) => {
 	$2
 }
+endsnippet
+
+snippet to "timeout"
+setTimeout(()=> {
+	$1
+},$2);
 endsnippet
 
 
