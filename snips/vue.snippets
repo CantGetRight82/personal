@@ -1,0 +1,74 @@
+snippet fe "forEach"
+$1.forEach( (obj) => {
+	$2
+});
+endsnippet
+
+snippet co "console.log"
+console.log($1);
+endsnippet
+
+snippet cl "class"
+class $1 {
+	constructor() {
+	}
+};
+
+module.exports = $1;
+endsnippet
+
+snippet rq "require"
+const $1 = require('$1');
+endsnippet
+
+snippet ip "import"
+import $1 from './$1';
+endsnippet
+
+snippet da "data"
+data() {
+	return {
+		$1
+	};
+},
+endsnippet
+
+snippet cp "components"
+components: {
+	$1,
+},
+endsnippet
+
+snippet mg "map getters"
+import { mapGetters } from 'vuex';
+computed: {
+	...mapGetters([
+		'$1',
+	]),
+},
+endsnippet
+
+snippet af "arrow function"
+async($1) => {
+	$2
+}
+endsnippet
+
+snippet to "timeout"
+setTimeout(()=> {
+	$1
+},$2);
+endsnippet
+
+
+snippet rf "read file"
+const fs = require('fs');
+const str = fs.readFileSync('$1').toString();
+endsnippet
+
+
+snippet pr "promise"
+new Promise((ok,fail) => {
+	$1
+});
+endsnippet
