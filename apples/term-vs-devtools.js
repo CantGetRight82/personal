@@ -13,7 +13,7 @@ if(!chrome.frontmost()) {
     }
     chrome.activate();
 } else {
-    const terminal = Application('Terminal');
+    const terminal = Application('Kitty');
     terminal.activate();
 }
 
