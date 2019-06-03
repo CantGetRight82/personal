@@ -7,6 +7,7 @@ Plug 'easymotion/vim-easymotion'
 Plug 'posva/vim-vue'
 Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
 call plug#end()
 
 let g:UltiSnipsSnippetDirectories = [ expand('~/personal/snips') ]
@@ -21,12 +22,23 @@ set autoindent
 set tabstop=4 softtabstop=0 expandtab shiftwidth=4
 set noswapfile
 
+set number
+set relativenumber
+
 
 " -- keys
 noremap <c-p> :CocList files<cr>
 noremap <c-b> :CocList  buffers<cr>
 noremap <c-s> :w<cr>:call jobstart('sh reload.sh')<cr>
 noremap <Tab> <C-^>
+
+
+command! -nargs=+ -complete=custom,s:GrepArgs F exe 'CocList grep '.<q-args>
+function! s:GrepArgs(...)
+  let list = ['-S', '-smartcase', '-i', '-ignorecase', '-w', '-word',
+        \ '-e', '-regex', '-u', '-skip-vcs-ignores', '-t', '-extension']
+  return join(list, "\n")
+endfunction
 
 inoremap <c-s> <c-o>:w<cr>
 
