@@ -28,27 +28,21 @@ set relativenumber
 
 " -- keys
 noremap <c-p> :CocList files<cr>
-noremap <c-b> :CocList  buffers<cr>
+noremap <c-b> :CocList buffers<cr>
 noremap <c-s> :w<cr>:call jobstart('sh reload.sh')<cr>
 noremap <Tab> <C-^>
 
 
-command! -nargs=+ -complete=custom,s:GrepArgs F exe 'CocList grep '.<q-args>
-function! s:GrepArgs(...)
-  let list = ['-S', '-smartcase', '-i', '-ignorecase', '-w', '-word',
-        \ '-e', '-regex', '-u', '-skip-vcs-ignores', '-t', '-extension']
-  return join(list, "\n")
-endfunction
+
+noremap § :CocList grep -S 
 
 inoremap <c-s> <c-o>:w<cr>
 
-
 map <Leader> <Plug>(easymotion-prefix)
-
-
 
 autocmd BufReadPost,BufNewFile *.vue setlocal filetype=vue
 
+let $NVIM_NODE_LOG_FILE="/tmp/neo"
 
 " if hidden is not set, TextEdit might fail.
 set hidden
