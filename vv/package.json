@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "acorn": "^6.0.4",
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "bunyan": "^1.8.12",
     "chrome-location": "^1.2.1",
     "chrome-remote-interface": "^0.26.1",
