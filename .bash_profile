@@ -18,3 +18,7 @@ tm() {
 
 export FZF_DEFAULT_COMMAND='ag --nocolor --ignore node_modules -g ""'
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+function cdt() {
+    cd $(tmux display-message -p -F "#{pane_current_path}" -t0)
+}
