@@ -22,3 +22,4 @@ export FZF_DEFAULT_COMMAND='ag --nocolor --ignore node_modules -g ""'
 function cdt() {
     cd $(tmux display-message -p -F "#{pane_current_path}" -t0)
 }
+export PATH="/usr/local/opt/node@10/bin:$PATH"

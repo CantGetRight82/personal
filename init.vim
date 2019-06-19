@@ -34,6 +34,7 @@ noremap <Tab> <C-^>
 
 
 
+noremap <f1> :DeeMuxNode<cr>
 noremap § :CocList grep -S 
 
 inoremap <c-s> <c-o>:w<cr>
