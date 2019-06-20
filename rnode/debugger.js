@@ -19,12 +19,13 @@ module.exports = async(plugin) => {
 
     let lastWord = null;
     plugin.registerAutocmd('CursorMoved', async()=> {
+        if(dee.paused) {
             const word = await nvim.eval('expand("<cword>")');
-        console.log(word);
             if(word !== lastWord) {
                 lastWord = word;
                 dee.evaluateFrame(''+word);
             }
+        }
     }, { pattern:'*' });
 
 	plugin.registerCommand('DeeMuxNode', [plugin.nvim.buffer, async() => {

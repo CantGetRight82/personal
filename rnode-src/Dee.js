@@ -122,12 +122,6 @@ module.exports = class Dee {
 
     addMappings() {
         const { nvim } = this.plugin;
-        nvim.command('noremap <buffer> <nowait> <space> :DeeTogglePlay<cr>');
-        nvim.command('noremap <buffer> <esc> :DeeQuit<cr>');
-        nvim.command('noremap <buffer> § :DeeBreak<cr>');
-        nvim.command('noremap <buffer> n :DeeStepOver<cr>');
-        nvim.command('noremap <buffer> ; :DeeStepInto<cr>');
-        nvim.command("noremap <buffer> ' :DeeStepOut<cr>");
     }
 
     async evaluateFrame(expression) {

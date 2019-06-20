@@ -33,9 +33,15 @@ noremap <c-s> :w<cr>:call jobstart('sh reload.sh')<cr>
 noremap <Tab> <C-^>
 
 
-
-noremap <f1> :DeeMuxNode<cr>
 noremap § :CocList grep -S 
+
+noremap <F1> :DeeMuxNode<cr>
+noremap <F8> :DeeTogglePlay<cr>
+noremap <esc> :DeeQuit<cr>
+noremap ± :DeeBreak<cr>
+noremap n :DeeStepOver<cr>
+noremap <F5> :DeeStepInto<cr>
+noremap <F6> :DeeStepOut<cr>
 
 inoremap <c-s> <c-o>:w<cr>
 
