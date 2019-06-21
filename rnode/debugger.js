@@ -36,6 +36,7 @@ module.exports = async(plugin) => {
     }, {
         nargs: 1,
     });
+
 	plugin.registerCommand('DeeMuxNode', [plugin.nvim.buffer, async() => {
         let pids = child_process.execFileSync('tmux', [
             'list-panes',
