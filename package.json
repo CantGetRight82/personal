@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "chrome-remote-interface": "^0.27.2"
+    "axios": "^0.19.0",
+    "chrome-remote-interface": "^0.27.2",
+    "source-map": "^0.7.3"
   }
 }

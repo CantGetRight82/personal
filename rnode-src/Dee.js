@@ -1,4 +1,5 @@
 const chromeRemoteInterface = require('chrome-remote-interface');
+const { SourceMapConsumer } = require('source-map');
 const bar = require('./highlight-bar');
 
 let pclient = null;
@@ -42,6 +43,18 @@ module.exports = class Dee {
             const { Debugger, Runtime } = client;
             Debugger.scriptParsed(e => {
                 const { url } = e;
+                if(url.includes('http://')) {
+                    const { sourceMapURL } = e;
+                    if(sourceMapURL.length) {
+                        const data = sourceMapURL.substr(sourceMapURL.indexOf(',')+1);
+                        const rawSourceMap = JSON.parse(Buffer.from(data,'base64'));
+                        rawSourceMap.sections.forEach(section => {
+                            const [source] = section.map.sources;
+                            const abs = process.cwd() + '/' + source;
+                            scriptMap[abs] = Object.assign({ map:rawSourceMap }, { scriptId:e.scriptId });
+                        });
+                    }
+                }
                 if(url.includes('file://')) {
                     const path = url
                         .replace('file://','')
@@ -55,6 +68,7 @@ module.exports = class Dee {
                 this.lastCallFrameId = frame.callFrameId;
                 console.log(frame);
                 const { url } = frame;
+                console.log(url);
                 if(url.includes('file://')) {
                     const cwd = await nvim.eval('getcwd()');
                     const path = url
@@ -149,6 +163,7 @@ module.exports = class Dee {
     async toggleBreakPoint(file, line) {
         const { Debugger } = await pclient;
         const { nvim } = this.plugin;
+        const { log } = this;
         let arr = breakMap[file];
         if(arr === undefined) {
             arr = breakMap[file] = [];
@@ -174,13 +189,20 @@ module.exports = class Dee {
                 scriptId:script.scriptId,
                 lineNumber: line-1,
             };
-            if(script.sourceMapURL.length) {
-                console.log('TODO SOURCEMAP');
-                log('TODO SOURCEMAP');
-                return;
+            if(script.map) {
+                const mapped = await SourceMapConsumer.with(script.map,null, consumer => {
+                    return consumer.generatedPositionFor({
+                        source: 'src/Top.vue',
+                        line: location.lineNumber,
+                        column: 0,
+                    });
+                })
+                location.lineNumber = mapped.line  + 0;
             }
 
-            const { breakpointId } = await Debugger.setBreakpoint({ location });
+            const result = await Debugger.setBreakpoint({ location });
+            const { breakpointId } = result;
+            console.log(result);
 
             let id = breakId++;
             nvim.command('sign place '+id+' line='+line+' name=dee file='+file);

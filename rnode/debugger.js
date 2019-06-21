@@ -1,9 +1,24 @@
 
 const chromeRemoteInterface = require('chrome-remote-interface');
 const child_process = require('child_process');
+const axios = require('axios');
 
 const getFileAndLine = require('../rnode-src/get-file-and-line');
 const Dee = require('../rnode-src/Dee');
+const get = (url) => new Promise((ok,fail) => {
+    const http = require('http');
+    http.get(url, (resp) => {
+        let data = '';
+        resp.on('data', (chunk) => {
+            data += chunk;
+        });
+        resp.on('end', () => {
+            ok(data);
+        });
+    }).on('error', (err) => {
+        fail(err);
+    });
+});
 
 module.exports = async(plugin) => {
     plugin.setOptions({
@@ -15,18 +30,12 @@ module.exports = async(plugin) => {
 
     const dee = new Dee(plugin);
 
-    console.log('reloaded');
-
-    let lastWord = null;
-    plugin.registerAutocmd('CursorMoved', async()=> {
-            const word = await nvim.eval('expand("<cword>")');
-        console.log(word);
-            if(word !== lastWord) {
-                lastWord = word;
-                dee.evaluateFrame(''+word);
-            }
-    }, { pattern:'*' });
-
+	plugin.registerCommand('DeeBug', async([id]) => {
+        nvim.outWrite('debugging '+id+'\n');
+        await dee.connect({ target:id });
+    }, {
+        nargs: 1,
+    });
 	plugin.registerCommand('DeeMuxNode', [plugin.nvim.buffer, async() => {
         let pids = child_process.execFileSync('tmux', [
             'list-panes',
@@ -47,7 +56,7 @@ module.exports = async(plugin) => {
             }
         });
         if(signaled) {
-            dee.connect( { port:9229 });
+            dee.connect({ port:9229 });
         }
     }]);
 
@@ -74,6 +83,21 @@ module.exports = async(plugin) => {
     }, {
         nargs: 1,
     });
+
+	// plugin.registerCommand('DeeTargets', async() => {
+        // const data = await get('http://localhost:9222/json');
+        // const list = JSON.parse(data)
+            // .filter(obj => obj.type === 'page')
+            // .map(obj => {
+            // return {
+                // filename: obj.url,
+                // pattern: obj.id,
+            // }
+        // });
+        // await plugin.nvim.callFunction('setloclist', [0, list]);
+        // await plugin.nvim.command('CocList locationlist');
+        // console.log(list);
+    // });
 
 }
 
