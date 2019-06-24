@@ -27,24 +27,23 @@ set relativenumber
 
 
 " -- keys
+noremap § :CocList grep -S 
 noremap <c-p> :CocList files<cr>
 noremap <c-b> :CocList buffers<cr>
 noremap <c-s> :w<cr>:call jobstart('sh reload.sh')<cr>
 noremap <Tab> <C-^>
 
+noremap <F1> :ChromeConsole<cr>
+noremap <F2> :CocList chrometargets<cr>
+noremap <F3> :CocList chromeclicks<cr>
+noremap <F4> :DeeMuxNode<cr>
 
-noremap <f1> :DeeMuxNode<cr>
-noremap <f2> :CocList chrometargets<cr>
-noremap <f3> :CocList chromeclicks<cr>
-noremap § :CocList grep -S 
-
-noremap <F1> :DeeMuxNode<cr>
-noremap <F8> :DeeTogglePlay<cr>
-noremap <esc> :DeeQuit<cr>
-noremap ± :DeeBreak<cr>
-noremap n :DeeStepOver<cr>
 noremap <F5> :DeeStepInto<cr>
 noremap <F6> :DeeStepOut<cr>
+noremap <F8> :DeeTogglePlay<cr>
+noremap <F12> :DeeQuit<cr>
+noremap ± :DeeBreak<cr>
+noremap n :DeeStepOver<cr>
 
 inoremap <c-s> <c-o>:w<cr>
 

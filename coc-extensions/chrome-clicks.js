@@ -1,5 +1,6 @@
 const fs = require('fs');
-const chromeRemoteInterface = require('chrome-remote-interface');
+let cdp;
+// const chromeRemoteInterface = require('chrome-remote-interface');
 const {
     ExtensionContext,
     workspace,
@@ -9,34 +10,22 @@ const {
 
 exports.activate = context => {
     const { nvim } = workspace;
+    cdp = require('../rnode-src/cdp')(nvim);
+
     context.subscriptions.push(listManager.registerList(
         new class extends BasicList {
             constructor(context, nvim) {
                 super(context);
-                this.connect();
             }
 
-            connect() {
-                this.connected = new Promise(async(ok) => {
-                    const client = await chromeRemoteInterface({
-                        target: (list) => {
-                            return list.find(obj => obj.url.includes('localhost'));
-                        },
-                    });
+            get name() {
+                return 'chromeclicks';
+            }
 
-                    const { Page, Runtime, DOM, Overlay } = client;
-                    await DOM.enable();
-                    await Promise.all([
-                        Page,
-                        Runtime,
-                        Overlay,
-                    ].map(obj => obj.enable()));
-                    ok(client);
-                });
-
+            async loadItems(context, cancellationToken) {
                 this.addAction('open', async(item, context) => {
 
-                    const { Runtime } = await this.connected;
+                    const Runtime = await cdp.Runtime;
                     await Runtime.evaluate({
                         userGesture: true,
                         expression:`
@@ -46,12 +35,6 @@ exports.activate = context => {
                     });
                     await this.hideClicks();
                 });
-            }
-            get name() {
-                return 'chromeclicks';
-            }
-
-            async loadItems(context, cancellationToken) {
                 let map = await this.showClicks();
                 return Object.entries(map).map(([k,v]) => {
                     return {
@@ -62,7 +45,7 @@ exports.activate = context => {
             }
 
             async hideClicks() {
-                const { Page, Runtime, DOM, Overlay } = await this.connected;
+                const Runtime = await cdp.Runtime;
                 const body = await Runtime.evaluate({
                     expression:`
         [...document.querySelectorAll('[data-over]')].forEach(n => {
@@ -74,7 +57,7 @@ exports.activate = context => {
             }
 
             async showClicks() {
-                const { Page, Runtime, DOM, Overlay } = await this.connected;
+                const Runtime = await cdp.Runtime;
                 const body = await Runtime.evaluate({
                     includeCommandLineAPI: true,
                     returnByValue: true,

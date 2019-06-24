@@ -1,1 +1,0 @@
-/Users/rinke/personal/init.vim
