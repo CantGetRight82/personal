@@ -1,14 +1,14 @@
 const chromeRemoteInterface = require('chrome-remote-interface');
 const mapper = require('./mapper');
+const log = require('./log');
 const fs = require('fs');
+
 let bar;
 
 let services = {};
 let proxy = null;
 
-const log = (...rest) => {
-    fs.appendFileSync('/tmp/me', new Date().toJSON() + ': '+JSON.stringify(rest,null,4));
-}
+
 
 let nvim;
 module.exports = (ref) => {
@@ -26,8 +26,8 @@ module.exports = (ref) => {
                 if(key === 'Debugger') {
                     await obj.initDebugger(service, nvim);
 
-                    // const Runtime = await getService(obj, 'Runtime');
-                    // await Runtime.runIfWaitingForDebugger();
+                    const Runtime = await getService(obj, 'Runtime');
+                    await Runtime.runIfWaitingForDebugger();
                 }
                 await service.enable();
                 ok(service);
@@ -35,21 +35,24 @@ module.exports = (ref) => {
         }
         return services[key];
     }
-
     // bar = require('./highlight-bar')({nvim});
-
     proxy = new Proxy({
         paused: false,
-        connect() {
+        connectionPromise: null,
+        connect(params = null) {
             if(!this.connectionPromise) {
-                this.connectionPromise = new Promise(async(ok) => {
-                    client = await chromeRemoteInterface({
+                if(!params) {
+                    params = {
                         target: (list) => {
                             return list.find(obj => {
                                 return obj.type === 'page' && obj.url.indexOf('chrome-devtools') !== 0;
                             });
                         },
-                    });
+                    };
+                }
+                this.connectionPromise = new Promise(async(ok) => {
+                    client = await chromeRemoteInterface(params);
+                    nvim.outWrite('connected\n');
                     ok(client);
                 });
             }
@@ -66,8 +69,11 @@ module.exports = (ref) => {
             Debugger.paused(async(e) => {
                 this.paused = true;
                 const frame = e.callFrames[0];
+                // log('paused at '+ frame.functionName);
+                // log({frame});
                 const { url, location } = frame;
                 const { lineNumber, columnNumber } = location;
+                log({lineNumber});
                 const loc = await mapper.remoteToLocal(url, lineNumber, columnNumber);
                 if(loc) {
                     await nvim.command('edit '+loc.source);
@@ -78,6 +84,7 @@ module.exports = (ref) => {
                 }
             });
             Debugger.resumed(async(e) => {
+                log('resumed');
                 this.paused = false;
                 await nvim.buffer.clearNamespace(nsId);
             });

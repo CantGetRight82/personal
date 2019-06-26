@@ -1,15 +1,21 @@
 let cdp;
 const fs = require('fs');
 const mapper = require('./mapper');
+const log = require('./log');
 
 let breakId = 1;
 let breakMap = {};
+
 module.exports = class Dee {
     constructor(plugin) {
         fs.appendFileSync('/tmp/me', 'Dee constructor');
         this.plugin = plugin;
         cdp = require('./cdp')(plugin.nvim);
         plugin.nvim.command('sign define dee text=🔴 texthl=Normal');
+    }
+
+    async connect(params) {
+        return cdp.connect(params);
     }
 
     async getDebugger() {
@@ -29,10 +35,10 @@ module.exports = class Dee {
     async togglePlay() {
         const Debugger = await this.getDebugger();
         if(cdp.paused) {
-            console.log('resuming');
+            log('resuming');
             await Debugger.resume();
         } else {
-            console.log('pausing');
+            log('pausing');
             await Debugger.pause();
         }
     }
@@ -54,9 +60,11 @@ module.exports = class Dee {
             const idx = arr.indexOf(existing);
             arr.splice(idx,1);
         } else {
-            const location = await mapper.localToRemote(file, line);
-            const result = await Debugger.setBreakpoint({ location });
+            const target = await mapper.localToRemote(file, line);
+            const result = await Debugger.setBreakpointByUrl(target);
             const { breakpointId } = result;
+
+            log('breakpoint result', {result});
 
             let id = breakId++;
             nvim.command('sign place '+id+' line='+line+' name=dee file='+file);

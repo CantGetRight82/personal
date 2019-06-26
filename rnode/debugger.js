@@ -15,27 +15,27 @@ module.exports = async(plugin) => {
     const dee = new Dee(plugin);
 
 	plugin.registerCommand('DeeMuxNode', [plugin.nvim.buffer, async() => {
-        let pids = child_process.execFileSync('tmux', [
-            'list-panes',
-            '-F',
-            '#{pane_pid}'
-        ]).toString().trim().split('\n');
+        // let pids = child_process.execFileSync('tmux', [
+        //     'list-panes',
+        //     '-F',
+        //     '#{pane_pid}'
+        // ]).toString().trim().split('\n');
 
-        const signaled = pids.find(pid => {
-            try {
-                const [cid,bin] = child_process
-                    .execFileSync('pgrep', ['-alP', pid])
-                    .toString().split(' ');
-                if(bin.includes('node')) {
-                    child_process.execFileSync('kill', [ '-SIGUSR1', cid ]);
-                    return cid;
-                }
-            } catch(e) {
-            }
-        });
-        if(signaled) {
+        // const signaled = pids.find(pid => {
+        //     try {
+        //         const [cid,bin] = child_process
+        //             .execFileSync('pgrep', ['-alP', pid])
+        //             .toString().split(' ');
+        //         if(bin.includes('node')) {
+        //             child_process.execFileSync('kill', [ '-SIGUSR1', cid ]);
+        //             return cid;
+        //         }
+        //     } catch(e) {
+        //     }
+        // });
+        // if(signaled) {
             dee.connect({ port:9229 });
-        }
+        // }
     }]);
 
 	plugin.registerCommand('DeeQuit', [plugin.nvim.buffer, async() => {
@@ -46,9 +46,9 @@ module.exports = async(plugin) => {
         dee.togglePlay();
     }]);
 
-	plugin.registerCommand('DeeStepOver', [nvim.buffer, dee.stepOver]);
-	plugin.registerCommand('DeeStepInto', [nvim.buffer, dee.stepInto]);
-	plugin.registerCommand('DeeStepOut', [nvim.buffer, dee.stepOut]);
+	plugin.registerCommand('DeeStepOver', () => dee.stepOver());
+	plugin.registerCommand('DeeStepInto', () => dee.stepInto());
+	plugin.registerCommand('DeeStepOut', () => dee.stepOut());
 
 	plugin.registerCommand('DeeBreak', async() => {
         const { file, line } = await getFileAndLine(nvim);
