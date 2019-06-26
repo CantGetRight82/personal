@@ -43,7 +43,7 @@ noremap <F6> :DeeStepOut<cr>
 noremap <F8> :DeeTogglePlay<cr>
 noremap <F12> :DeeQuit<cr>
 noremap ± :DeeBreak<cr>
-noremap n :DeeStepOver<cr>
+noremap <F9> :DeeStepOver<cr>
 
 inoremap <c-s> <c-o>:w<cr>
 
