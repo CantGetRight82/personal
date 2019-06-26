@@ -1,7 +1,8 @@
 const { SourceMapConsumer } = require('source-map');
 const log = require('./log');
-let _map = {};
 
+let scripts = {};
+let sources = {};
 
 const parseSourceMap = (sourceMapURL) => {
     const data = sourceMapURL.substr(sourceMapURL.indexOf(',')+1);
@@ -22,15 +23,39 @@ module.exports = new class {
             }
             if(e.sourceMapURL) {
                 e.map = parseSourceMap(e.sourceMapURL);
+                if(e.map.sections) {
+                    e.map.sections.forEach(section => {
+                        const [ source ] = section.map.sources;
+                        sources[source] = e;
+                    });
+                }
             }
-            _map[resolved] = e;
+            scripts[resolved] = e;
         }
     }
 
     async localToRemote(path, line) {
-        let e = _map[path];
+        let source;
+        let e = scripts[path];
+        if(!e) {
+            source = path.replace(process.cwd()+'/', '');
+            e = sources[source];
+        }
         if(e) {
             if(e.map) {
+                let mapped = await SourceMapConsumer.with(e.map, null, consumer => {
+                    return consumer.generatedPositionFor({
+                        source,
+                        line:line-1,
+                        column: 0,
+                    });
+                });
+                return {
+                    url: e.url,
+                    lineNumber: mapped.line,
+                    columnNumber: mapped.column,
+                }
+
             }
             return {
                 url: e.url,
@@ -43,9 +68,16 @@ module.exports = new class {
     async remoteToLocal(url, line, column) {
         log({line});
         const path = url.replace('file://','');
-        let e = _map[path];
+        let e = scripts[path];
         if(e) {
             if(e.map) {
+                let mapped = await SourceMapConsumer.with(e.map, null, consumer => {
+                    return consumer.originalPositionFor({
+                        line: line,
+                        column: column,
+                    });
+                });
+                return mapped;
             }
             return {
                 source: path,
@@ -53,14 +85,15 @@ module.exports = new class {
                 column: column,
             }
         }
+
         log('remoteToLocal', 'not found', path);
     }
 
     async localToRemote2(path, line) {
         const source = path.replace(process.cwd()+'/', '');
         let result;
-        for(let key in _map) {
-            let e = _map[key];
+        for(let key in scripts) {
+            let e = scripts[key];
             const { sourceMapURL } = e;
             if(sourceMapURL.length) {
                 const data = sourceMapURL.substr(sourceMapURL.indexOf(',')+1);
@@ -89,8 +122,8 @@ module.exports = new class {
 
     async remoteToLocal2(url, line, column) {
         let result;
-        for(let key in _map) {
-            let e = _map[key];
+        for(let key in scripts) {
+            let e = scripts[key];
             const { sourceMapURL } = e;
             if(sourceMapURL.length) {
                 const data = sourceMapURL.substr(sourceMapURL.indexOf(',')+1);
