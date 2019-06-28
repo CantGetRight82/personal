@@ -18,8 +18,8 @@ module.exports = (ref) => {
 
     nvim = ref;
     const getService = async(obj,key) => {
+        log('service', key, 'for', require.main.filename);
         if(services[key] === undefined) {
-            log('SERVICE REQUESTED', { key });
             services[key] = new Promise(async(ok) => {
                 const client = await obj.connect();
                 let service = client[key];
@@ -40,6 +40,11 @@ module.exports = (ref) => {
         paused: false,
         connectionPromise: null,
         connect(params = null) {
+            if(params !== null) {
+                this.connectionPromise = null;
+                services = {};
+                log('services reset for', require.main.filename);
+            }
             if(!this.connectionPromise) {
                 if(!params) {
                     params = {

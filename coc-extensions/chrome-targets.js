@@ -2,6 +2,7 @@
 const fs = require('fs');
 const axios = require('axios');
 
+
 const log = (...rest) => {
     fs.appendFileSync('/tmp/neo', rest.map(o => JSON.stringify(o)).join(' ')+'\n');
 }
@@ -17,7 +18,8 @@ class TargetList extends BasicList {
     constructor(context, nvim) {
         super(context);
         this.addAction('open', (item, context) => {
-            nvim.command('DeeBug '+item.data);
+            require('../rnode-src/cdp')(nvim).connect(item.data);
+            // nvim.command('DeeBug '+item.data);
         });
     }
     get name() {

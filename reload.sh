@@ -1,6 +1,19 @@
 
 
-tmux send-keys -t .1 "node icons.js" ENTER
+    
+tmux respawn-pane -k -t .1
+tmux send-keys -t .1 "nvim ." ENTER
+sleep 1
+tmux send-keys -t .1 ":ChromeScrollUp" ENTER
+
+# tmux send-keys -t .1 16gg
+# tmux send-keys -t .1 ":CocList vueawesome" ENTER
+# sleep 1
+# tmux send-keys -t .1 "facebook"
+# sleep 0.2
+# tmux send-keys -t .1 ENTER
+
+
 # sh test-debug-node-vuel.sh
 # sh test-debug-web-vuel.sh
 

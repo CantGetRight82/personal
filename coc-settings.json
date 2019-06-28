@@ -1,3 +1,4 @@
 {
-    "suggest.numberSelect": true
+    "suggest.numberSelect": true,
+    "list.source.files.args": ["--color", "never", "--files", "--follow"]
 }

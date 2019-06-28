@@ -47,6 +47,9 @@ noremap <F9> :DeeStepOver<cr>
 
 inoremap <c-s> <c-o>:w<cr>
 
+noremap <c-up> :ChromeScrollUp<cr>
+noremap <c-down> :ChromeScrollDown<cr>
+
 map <Leader> <Plug>(easymotion-prefix)
 
 autocmd BufReadPost,BufNewFile *.vue setlocal filetype=vue
