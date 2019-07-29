@@ -1,3 +1,86 @@
+const { commands, workspace } = require('coc.nvim')
+const log = require('../rnode-src/log');
+exports.activate = async(context) => {
+    let { nvim } = workspace;
+
+    const cdp = require('../rnode-src/cdp')(nvim);
+    context.subscriptions.push(commands.registerCommand('chrome.clicks', async() => {
+        const Runtime = await cdp.Runtime;
+        showClicks(Runtime);
+        let nr = await nvim.call('getchar');
+        if(nr === 27) {
+            //escape cancels
+        } else {
+            let key = await nvim.call('nr2char', nr);
+            await Runtime.evaluate({
+                expression:`document.querySelector('[data-clickkey=${key}]').node.click()`,
+                userGesture: true,
+            });
+            log({ nr, key });
+        }
+        hideClicks(Runtime);
+    }));
+
+    const showClicks = async(Runtime) => {
+        const body = await Runtime.evaluate({
+            includeCommandLineAPI: true,
+            returnByValue: true,
+            expression:`
+var lib = 'abcdefghijklmnopqrstuvwxyz1234567890'.split('');
+var recurse = (node) => {
+    const map = getEventListeners(node);
+    if(map.click !== undefined) {
+        const key = lib.shift();
+
+        const rect = node.getBoundingClientRect();
+        const div = document.createElement('div');
+        div.innerText = key;
+        div.dataset.clickkey = key;
+        div.node = node;
+        const size = 32;
+        div.setAttribute('style', Object.entries({
+            'z-index': 100,
+            'font-size': '24px',
+            'border-radius': '50%',
+            position: 'absolute',
+            background: '#b00',
+            color: 'white',
+            top: (rect.top+window.scrollY)+'px',
+            left: rect.left+'px',
+            width: size + 'px',
+            height: size + 'px',
+            display: 'flex',
+            'justify-content': 'center',
+            'align-items': 'center',
+        }).map(([k,v]) => k+': '+v).join('; '));
+        document.body.appendChild(div);
+    }
+    if(node.childNodes.length) {
+        node.childNodes.forEach(n => {
+            recurse(n)
+        });
+    }
+}
+recurse(document.body);
+result;
+    `,
+        });
+    }
+
+    const hideClicks = async(Runtime) => {
+        const body = await Runtime.evaluate({
+            expression:`
+[...document.querySelectorAll('[data-clickkey]')].forEach(n => {
+    n.parentNode.removeChild(n);
+});
+        `,
+        });
+    }
+}
+
+/*
+            width: rect.width+'px',
+            height: rect.height+'px',
 const fs = require('fs');
 let cdp;
 // const chromeRemoteInterface = require('chrome-remote-interface');
@@ -63,13 +146,8 @@ exports.activate = context => {
                     returnByValue: true,
                     expression:`
 
-        var primordial = [ 'Achlys', 'Aether', 'Aion', 'Ananke', 'Chaos', 'Chronos', 'Erebus', 'Eros', 'Gaia', 'Hemera', 'Hypnos', 'Nemesis', 'Nesoi', 'Nyx', 'Ourea', 'Phanes', 'Pontus', 'Tartarus', 'Thalassa', 'Thanatos', 'Uranus' ];
-
-        var titans = [ 'Coeus', 'Crius', 'Cronus', 'Hyperion', 'Iapetus', 'Mnemosyne', 'Oceanus', 'Phoebe', 'Rhea', 'Tethys', 'Theia', 'Themis', 'Asteria', 'Astraeus', 'Atlas', 'Aura', 'Clymene', 'Dione', 'Helios', 'Selene', 'Eos', 'Epimetheus', 'Eurybia', 'Eurynome', 'Lelantos', 'Leto', 'Menoetius', 'Metis', 'Ophion', 'Pallas', 'Perses', 'Prometheus', 'Styx' ];
-
         var lib = [
-            ...primordial.map(s => s + ' (primordial)'),
-            ...titans.map(s => s + ' (titan)'),
+            ...('abcdefghijklmnopqrstuvwxyz1234567890'.split('')),
         ];
 
         var inc = 1;
@@ -79,7 +157,7 @@ exports.activate = context => {
             if(map.click !== undefined) {
                 let id = inc++;
 
-                const r = Math.floor(Math.random()*lib.length);
+                const r = 0; //Math.floor(Math.random()*lib.length);
                 const name = lib[r];
                 lib.splice(r,1);
 
@@ -125,3 +203,4 @@ exports.activate = context => {
 }
 
 
+*/

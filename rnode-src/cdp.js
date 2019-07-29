@@ -7,9 +7,6 @@ let bar;
 
 let services = {};
 let proxy = null;
-
-
-
 let nvim;
 module.exports = (ref) => {
     if(proxy) {
@@ -35,7 +32,7 @@ module.exports = (ref) => {
         }
         return services[key];
     }
-    // bar = require('./highlight-bar')({nvim});
+
     proxy = new Proxy({
         paused: false,
         connectionPromise: null,
@@ -65,7 +62,6 @@ module.exports = (ref) => {
         },
 
         async initDebugger(Debugger, nvim) {
-            // let nsId = await nvim.createNamespace();
             Debugger.scriptParsed(e => {
                 mapper.parsed(e, nvim);
             });
@@ -74,8 +70,6 @@ module.exports = (ref) => {
             Debugger.paused(async(e) => {
                 this.paused = true;
                 const frame = e.callFrames[0];
-                // log('paused at '+ frame.functionName);
-                // log({frame});
                 const { url, location } = frame;
                 const { lineNumber, columnNumber } = location;
                 log({lineNumber});

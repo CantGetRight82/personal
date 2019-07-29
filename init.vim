@@ -33,22 +33,23 @@ noremap <c-b> :CocList buffers<cr>
 noremap <c-s> :w<cr>:call jobstart('sh reload.sh')<cr>
 noremap <Tab> <C-^>
 
-noremap <F1> :ChromeConsole<cr>
-noremap <F2> :CocList chrometargets<cr>
-noremap <F3> :CocList chromeclicks<cr>
-noremap <F4> :DeeMuxNode<cr>
+noremap <F2> :CocCommand chrome.clicks<cr>
+noremap <F3> :CocList chrometargets<cr>
+noremap <F4> :CocList nodetargets<cr>
 
 noremap <F5> :DeeStepInto<cr>
 noremap <F6> :DeeStepOut<cr>
 noremap <F8> :DeeTogglePlay<cr>
-noremap <F12> :DeeQuit<cr>
 noremap ± :DeeBreak<cr>
 noremap <F9> :DeeStepOver<cr>
 
+noremap <F12> :CocCommand chrome.console<cr>
+inoremap <F12> <esc>:CocCommand chrome.console<cr>
+
 inoremap <c-s> <c-o>:w<cr>
 
-noremap <c-up> :ChromeScrollUp<cr>
-noremap <c-down> :ChromeScrollDown<cr>
+noremap <c-up> :CocCommand chrome.scroll.up<cr>
+noremap <c-down> :CocCommand chrome.scroll.down<cr>
 
 map <Leader> <Plug>(easymotion-prefix)
 
@@ -181,16 +182,4 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
-
-
-
-
-
-
-
-
-
-
-
-
 
