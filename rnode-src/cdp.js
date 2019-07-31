@@ -20,13 +20,15 @@ module.exports = (ref) => {
             services[key] = new Promise(async(ok) => {
                 const client = await obj.connect();
                 let service = client[key];
-                if(key === 'Debugger') {
-                    await obj.initDebugger(service, nvim);
+                // if(key === 'Debugger') {
+                //     await obj.initDebugger(service, nvim);
 
-                    const Runtime = await getService(obj, 'Runtime');
-                    await Runtime.runIfWaitingForDebugger();
+                //     const Runtime = await getService(obj, 'Runtime');
+                //     await Runtime.runIfWaitingForDebugger();
+                // }
+                if(key !== 'Debugger') {
+                    await service.enable();
                 }
-                await service.enable();
                 ok(service);
             });
         }
