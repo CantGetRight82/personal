@@ -3,13 +3,12 @@
 call plug#begin('~/.config/nvim/plugs')
 Plug 'altercation/vim-colors-solarized'
 Plug 'neoclide/coc.nvim', {'do': './install.sh nightly'}
-Plug 'easymotion/vim-easymotion'
-Plug 'posva/vim-vue'
 Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 call plug#end()
 
+source ~/personal/vue-syntax.vim
 let g:UltiSnipsSnippetDirectories = [ expand('~/personal/snips') ]
 
 " -- colors
