@@ -8,7 +8,10 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 call plug#end()
 
-source ~/personal/vue-syntax.vim
+augroup vue
+  au!
+  au BufEnter *.vue source $VIMRUNTIME/syntax/html.vim
+augroup END
 let g:UltiSnipsSnippetDirectories = [ expand('~/personal/snips') ]
 
 " -- colors
