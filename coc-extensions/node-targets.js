@@ -1,5 +1,15 @@
 
+const {
+    ExtensionContext,
+    workspace,
+    listManager,
+    BasicList,
+} = require('coc.nvim');
+
 const child_process = require('child_process');
+const fs = require('fs');
+const axios = require('axios');
+
 const exec = (...args) => new Promise(ok => {
     const ps = child_process.exec(...args);
     let result = '';
@@ -62,20 +72,12 @@ const getList = async() => {
     });
 }
 
-const fs = require('fs');
-const axios = require('axios');
 
 
 const log = (...rest) => {
     fs.appendFileSync('/tmp/neo', rest.map(o => JSON.stringify(o)).join(' ')+'\n');
 }
 
-const {
-    ExtensionContext,
-    workspace,
-    listManager,
-    BasicList,
-} = require('coc.nvim');
 
 class TargetList extends BasicList {
     constructor(context, nvim) {
