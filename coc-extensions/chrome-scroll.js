@@ -2,7 +2,7 @@ const { commands, workspace } = require('coc.nvim')
 exports.activate = async(context) => {
     let { nvim } = workspace;
 
-    const cdp = require('../rnode-src/cdp')(nvim);
+    const cdp = require('../src/cdp')(nvim);
     const scroll = (dir) => async() => {
         let Runtime = await cdp.Runtime;
         await Runtime.evaluate({

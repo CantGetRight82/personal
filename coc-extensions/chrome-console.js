@@ -1,5 +1,5 @@
 const { commands, workspace } = require('coc.nvim')
-const log = require('../rnode-src/log');
+const log = require('../src/log');
 exports.activate = async(context) => {
     let { nvim } = workspace;
 
@@ -7,7 +7,7 @@ exports.activate = async(context) => {
     let output;
     let input;
 
-    const cdp = require('../rnode-src/cdp')(nvim);
+    const cdp = require('../src/cdp')(nvim);
     context.subscriptions.push(commands.registerCommand('chrome.console', async() => {
         if(output) {
             await Promise.all([

@@ -18,7 +18,7 @@ class TargetList extends BasicList {
     constructor(context, nvim) {
         super(context);
         this.addAction('open', (item, context) => {
-            require('../rnode-src/cdp')(nvim).connect(item.data);
+            require('../src/cdp')(nvim).connect(item.data);
             // nvim.command('DeeBug '+item.data);
         });
     }

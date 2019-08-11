@@ -1,5 +1,5 @@
 const fs = require('fs');
-const log = require('../rnode-src/log');
+const log = require('../src/log');
 let cdp;
 const {
     workspace,
@@ -43,7 +43,7 @@ const run = (arr) => {
 
 exports.activate = context => {
     const { nvim } = workspace;
-    cdp = require('../rnode-src/cdp')(nvim);
+    cdp = require('../src/cdp')(nvim);
 
     let arr = null;
     context.subscriptions.push(listManager.registerList(

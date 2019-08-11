@@ -1,5 +1,5 @@
 const { commands, workspace } = require('coc.nvim')
-const log = require('../rnode-src/log');
+const log = require('../src/log');
 const { SourceMapConsumer } = require('source-map');
 
 const getFileAndLine = async(nvim) => {
@@ -43,7 +43,7 @@ exports.activate = async(context) => {
         return JSON.parse( Buffer.from(str,'base64') );
     }
 
-    const cdp = require('../rnode-src/cdp')(nvim);
+    const cdp = require('../src/cdp')(nvim);
 
 
     let instance = null;

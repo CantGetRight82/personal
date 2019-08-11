@@ -1,9 +1,9 @@
 const { commands, workspace } = require('coc.nvim')
-const log = require('../rnode-src/log');
+const log = require('../src/log');
 exports.activate = async(context) => {
     let { nvim } = workspace;
 
-    const cdp = require('../rnode-src/cdp')(nvim);
+    const cdp = require('../src/cdp')(nvim);
     context.subscriptions.push(commands.registerCommand('chrome.clicks', async() => {
         const Runtime = await cdp.Runtime;
         showClicks(Runtime);
@@ -93,7 +93,7 @@ const {
 
 exports.activate = context => {
     const { nvim } = workspace;
-    cdp = require('../rnode-src/cdp')(nvim);
+    cdp = require('../src/cdp')(nvim);
 
     context.subscriptions.push(listManager.registerList(
         new class extends BasicList {

@@ -2,7 +2,7 @@
 let cdp;
 
 module.exports = async(plugin) => {
-    cdp = require('../rnode-src/cdp')(plugin.nvim);
+    cdp = require('../src/cdp')(plugin.nvim);
     plugin.setOptions({
         dev: false,
         alwaysInit: false,

@@ -1,4 +1,4 @@
-const log = require('../rnode-src/log');
+const log = require('../src/log');
 const { commands, workspace } = require('coc.nvim')
 const fs = require('fs');
 const path = require('path');

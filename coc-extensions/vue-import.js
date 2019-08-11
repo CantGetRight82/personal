@@ -5,7 +5,7 @@ const {
     BasicList,
 } = require('coc.nvim');
 
-const log = require('../rnode-src/log');
+const log = require('../src/log');
 const fs = require('fs');
 const path = require('path');
 const importLocal = require('../src/vue-import-local');
