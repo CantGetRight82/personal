@@ -1,7 +1,8 @@
 
 # sh test/vue-new.sh
 # sh test/vue-import.sh
-sh test/node-require.sh
+# sh test/node-require.sh
+sh test/kill.sh
 
 
 # tmux send-keys -t .1 c-c
