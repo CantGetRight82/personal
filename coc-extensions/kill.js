@@ -17,11 +17,11 @@ exports.activate = context => {
         new class extends BasicList {
             constructor(context) {
                 super(context);
-                this.addAction('open', async(item, context) => {
-                    execSync('kill '+item.data);
-                });
                 this.addAction('user1', async(item, context) => {
                     execSync('kill -USR1 '+item.data);
+                });
+                this.addAction('kill', async(item, context) => {
+                    execSync('kill '+item.data);
                 });
                 this.addAction('force kill', async(item, context) => {
                     execSync('kill -9 '+item.data);
