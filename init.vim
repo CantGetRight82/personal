@@ -6,12 +6,11 @@ Plug 'neoclide/coc.nvim', {'do': './install.sh nightly'}
 Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
+Plug 'itchyny/lightline.vim'
 call plug#end()
 
-augroup vue
-  au!
-  au BufEnter *.vue source $VIMRUNTIME/syntax/html.vim
-augroup END
+source ~/personal/vue-syntax.vim
+
 let g:UltiSnipsSnippetDirectories = [ expand('~/personal/snips') ]
 
 " -- colors
@@ -29,7 +28,7 @@ set relativenumber
 
 
 " -- keys
-noremap § :CocList grep -S 
+noremap § :CocList grep -S --follow 
 noremap <c-p> :CocList files<cr>
 noremap <c-b> :CocList buffers<cr>
 noremap <c-s> :w<cr>:call jobstart('sh reload.sh')<cr>
@@ -153,15 +152,33 @@ command! -nargs=0 Format :call CocAction('format')
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
 
+let g:debugtarget = ''
+function! DebugGetStatus()
+    if g:debugtarget != ''
+        return "🐛🧐".g:debugtarget
+    else 
+        return ""
+    endif
+endfunction
+function! DebugSetTargetName(name)
+  let g:debugtarget = a:name
+endfunction
+
+function! LightLineFilename()
+  return expand('%')
+endfunction
+
 " Add diagnostic info for https://github.com/itchyny/lightline.vim
 let g:lightline = {
-      \ 'colorscheme': 'wombat',
+      \ 'colorscheme': 'solarized',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
+      \             [ 'cocstatus', 'readonly', 'filename', 'modified', 'debugtarget' ] ]
       \ },
       \ 'component_function': {
-      \   'cocstatus': 'coc#status'
+      \   'cocstatus': 'coc#status',
+      \   'debugtarget': 'DebugGetStatus',
+      \   'filename': 'LightLineFilename'
       \ },
       \ }
 
@@ -186,5 +203,5 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 nnoremap <silent> <space>l  :<C-u>CocList<CR>
-nnoremap <silent> <space>r  :<C-u>CocList noderequire<CR>
+nnoremap <silent> <space>r  :<C-u>CocList require<CR>
 

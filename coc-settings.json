@@ -1,4 +1,5 @@
 {
     "suggest.numberSelect": true,
+    "suggest.triggerAfterInsertEnter": false,
     "list.source.files.args": ["--color", "never", "--files", "--follow"]
 }

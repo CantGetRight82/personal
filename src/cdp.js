@@ -1,34 +1,21 @@
 const chromeRemoteInterface = require('chrome-remote-interface');
-const mapper = require('./mapper');
+const { SourceMapConsumer } = require('source-map');
 const log = require('./log');
 const fs = require('fs');
 
 let bar;
-
 let services = {};
 let proxy = null;
-let nvim;
-module.exports = (ref) => {
-    if(proxy) {
-        return proxy;
-    }
 
-    nvim = ref;
+module.exports = (nvim) => {
+    if(proxy) return proxy;
+
     const getService = async(obj,key) => {
-        log('service', key, 'for', require.main.filename);
         if(services[key] === undefined) {
             services[key] = new Promise(async(ok) => {
                 const client = await obj.connect();
                 let service = client[key];
-                // if(key === 'Debugger') {
-                //     await obj.initDebugger(service, nvim);
-
-                //     const Runtime = await getService(obj, 'Runtime');
-                //     await Runtime.runIfWaitingForDebugger();
-                // }
-                if(key !== 'Debugger') {
-                    await service.enable();
-                }
+                await service.enable();
                 ok(service);
             });
         }
@@ -42,7 +29,6 @@ module.exports = (ref) => {
             if(params !== null) {
                 this.connectionPromise = null;
                 services = {};
-                log('services reset for', require.main.filename);
             }
             if(!this.connectionPromise) {
                 if(!params) {
@@ -56,38 +42,47 @@ module.exports = (ref) => {
                 }
                 this.connectionPromise = new Promise(async(ok) => {
                     client = await chromeRemoteInterface(params);
-                    nvim.outWrite('connected\n');
+                    nvim.call('DebugSetTargetName', params.target);
                     ok(client);
                 });
             }
             return this.connectionPromise;
         },
 
-        async initDebugger(Debugger, nvim) {
+        async initDebugger(Debugger) {
+            let maps = [];
             Debugger.scriptParsed(e => {
-                mapper.parsed(e, nvim);
+                if(e.sourceMapURL && e.sourceMapURL.includes('base64')) {
+                    const map = getMap(e);
+                    map.url = e.url;
+                    map.scriptId = e.scriptId;
+                    maps.unshift(map);
+                }
             });
-
-            let nsId;
             Debugger.paused(async(e) => {
-                this.paused = true;
                 const frame = e.callFrames[0];
                 const { url, location } = frame;
                 const { lineNumber, columnNumber } = location;
-                log({lineNumber});
-                const loc = await mapper.remoteToLocal(url, lineNumber, columnNumber);
-                if(loc) {
-                    await nvim.command('edit '+loc.source);
-                    await nvim.command(`call setpos(".", [0,${loc.line+1},${loc.column+1},0])`);
 
-                    let args = [ 0,-1,'TermCursor',loc.line,0,-1 ];
-                    nsId = await nvim.callFunction(`nvim_buf_add_highlight`, args);
+                const map = maps.find(map => map.url === url);
+                let mapped;
+                if(map) {
+                    mapped = await SourceMapConsumer.with(map, null, consumer => {
+                        return consumer.originalPositionFor({
+                            line:lineNumber+1,
+                            column: columnNumber,
+                        });
+
+                    });
+                } else {
+                    log(frame);
+
                 }
-            });
-            Debugger.resumed(async(e) => {
-                log('resumed');
-                this.paused = false;
-                await nvim.buffer.clearNamespace(nsId);
+                if(mapped) {
+                    const { source, line, column } = mapped;
+                    await nvim.command('edit '+source);
+                    await nvim.command(`call setpos(".", [0,${line},${column+1},0])`);
+                }
             });
         },
 
@@ -95,6 +90,9 @@ module.exports = (ref) => {
         get(obj,key) {
             if(obj[key] !== undefined) {
                 return obj[key];
+            }
+            if(key === 'then') {
+                return;
             }
             return getService(obj,key);
 
