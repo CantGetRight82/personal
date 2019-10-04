@@ -1,7 +1,8 @@
 
 # sh test/vue-new.sh
 # sh test/vue-import.sh
-sh test/require.sh
+# sh test/vue-rename.sh
+# sh test/require.sh
 # sh test/kill.sh
 # sh test/inspect.sh
 # sh test/annoyo-nr-complete.sh

@@ -1,6 +1,12 @@
 
-tmux respawn-pane -k -t .1
-tmux send-keys -t .1 "cd ~/vuel" ENTER
-tmux send-keys -t .1 "ls -la" ENTER
-tmux send-keys -t .1 "nvim index.js" ENTER
-tmux send-keys -t .1 ":CocList require" ENTER
+sh test/sandbox.sh
+tmux send-keys -t .1 "nvim src/node.js" ENTER
+
+sleep 0.4
+tmux send-keys -t .1 SPACE r
+sleep 0.4
+tmux send-keys -t .1 "chipo"
+sleep 0.4
+tmux send-keys -t .1 ENTER
+
+

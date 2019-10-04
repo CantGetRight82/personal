@@ -26,14 +26,16 @@ const addRequire = async(nvim, url) => {
     const toExt = path.extname(to);
 
     const name = path.basename(to, toExt);
+    const camel = name.replace(/([a-z])-([a-z])/g, (m,a,b) => a + b.toUpperCase());
 
     const buffer = await nvim.buffer;
     let str = (await buffer.getLines()).join('\n');
 
+    const isNode = str.includes('require(');
     const relativeToFile = (await getRelativeToFile(from, to)).replace(toExt,'');
-    if(fromExt === '.vue' || fs.existsSync('src/App.vue')) {
+    if(!isNode && (fromExt === '.vue' || fs.existsSync('src/App.vue'))) {
         //import land
-        const importLine = `import ${name} from '${relativeToFile}';`;
+        const importLine = `import ${camel} from '${relativeToFile}';`;
         if(fromExt === '.vue') {
             //import at 'export default'
             str = str.replace('export default', `${importLine}\nexport default`);
@@ -52,7 +54,6 @@ const addRequire = async(nvim, url) => {
         }
     } else {
         //require land
-        const camel = name.replace(/([a-z])-([a-z])/g, (m,a,b) => a + b.toUpperCase());
         const requireLine = `const ${camel} = require('${relativeToFile}');`;
         str = requireLine + '\n' + str;
     }
