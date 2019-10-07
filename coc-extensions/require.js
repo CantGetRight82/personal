@@ -12,7 +12,9 @@ const path = require('path');
 const getRelativeToFile = async(from, to) => {
     let relativeToFile;
     if(to.includes('src/')) {
-        return './' + path.relative(path.dirname(from), to);
+        const rel =  path.relative(path.dirname(from), to);
+        if(rel.charAt(0) !== '.') { return './'+rel; }
+        return rel;
     }
     return to; //node_modules
 }
@@ -20,7 +22,7 @@ const getRelativeToFile = async(from, to) => {
 const addRequire = async(nvim, url) => {
     const from = await nvim.eval('expand("%:p")');
 
-    const to = url;
+    const to = url.replace('/index.js', '');
 
     const fromExt = path.extname(from);
     const toExt = path.extname(to);
