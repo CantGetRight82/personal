@@ -7,6 +7,7 @@ Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'itchyny/lightline.vim'
+Plug 'digitaltoad/vim-pug'
 call plug#end()
 
 source ~/personal/vue-syntax.vim
@@ -205,3 +206,4 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 nnoremap <silent> <space>l  :<C-u>CocList<CR>
 nnoremap <silent> <space>r  :<C-u>CocList require<CR>
 
+nnoremap <silent> <space>m  :<C-u>CocList vuemove<cr>

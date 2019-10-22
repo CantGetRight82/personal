@@ -1,4 +1,6 @@
 
+# tmux send-keys -t .1 "node ~/personal/src/vue-move.js src/Answer.vue src/components/Answer.vue" ENTER
+sh test/vue-move.sh
 # sh test/vue-new.sh
 # sh test/vue-import.sh
 # sh test/vue-rename.sh
