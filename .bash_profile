@@ -1,7 +1,9 @@
-alias gs='git status'
 export LC_ALL=en_US.UTF-8  
 export LANG=en_US.UTF-8
 
+alias gs='git status'
+alias nx='nvim /usr/local/etc/nginx/nginx.conf'
+alias nt='nginx -t'
 
 function nv() {
     export NVIM_LISTEN_ADDRESS=$(tmux list-panes -F '/tmp/#{session_name},#{window_index},#{pane_index},#{window_active},#{pane_active}' | grep ',1,1$' | sed s/,/-/g)
