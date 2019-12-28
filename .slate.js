@@ -1,5 +1,3 @@
-//noremap <c-s> :w<cr>:!osascript -e 'tell app "Slate" to quit'<cr>:!osascript -e 'tell app "Slate" to activate'<cr>:!osascript -e 'tell app "Terminal" to activate'<cr>
-
 
 function hyper(key, next) {
 	slate.bind(key+':ctrl;cmd;alt;shift', next);

@@ -26,34 +26,36 @@ exports.activate = async(context) => {
             includeCommandLineAPI: true,
             returnByValue: true,
             expression:`
-var lib = 'abcdefghijklmnopqrstuvwxyz1234567890'.split('');
+var lib = 'qwertyuiopasdfghjklzxcvbnm'.split('');
 var recurse = (node) => {
-    const map = getEventListeners(node);
-    if(map.click !== undefined) {
-        const key = lib.shift();
+    if(node.offsetParent) {
+        const map = getEventListeners(node);
+        if(map.click !== undefined) {
+            const key = lib.shift();
 
-        const rect = node.getBoundingClientRect();
-        const div = document.createElement('div');
-        div.innerText = key;
-        div.dataset.clickkey = key;
-        div.node = node;
-        const size = 32;
-        div.setAttribute('style', Object.entries({
-            'z-index': 100,
-            'font-size': '24px',
-            'border-radius': '50%',
-            position: 'absolute',
-            background: '#b00',
-            color: 'white',
-            top: (rect.top+window.scrollY)+'px',
-            left: rect.left+'px',
-            width: size + 'px',
-            height: size + 'px',
-            display: 'flex',
-            'justify-content': 'center',
-            'align-items': 'center',
-        }).map(([k,v]) => k+': '+v).join('; '));
-        document.body.appendChild(div);
+            const rect = node.getBoundingClientRect();
+            const div = document.createElement('div');
+            div.innerText = key;
+            div.dataset.clickkey = key;
+            div.node = node;
+            const size = 32;
+            div.setAttribute('style', Object.entries({
+                'z-index': 100,
+                'font-size': '24px',
+                'border-radius': '50%',
+                position: 'absolute',
+                background: '#b00',
+                color: 'white',
+                top: (rect.top+window.scrollY)+'px',
+                left: rect.left+'px',
+                width: size + 'px',
+                height: size + 'px',
+                display: 'flex',
+                'justify-content': 'center',
+                'align-items': 'center',
+            }).map(([k,v]) => k+': '+v).join('; '));
+            document.body.appendChild(div);
+        }
     }
     if(node.childNodes.length) {
         node.childNodes.forEach(n => {

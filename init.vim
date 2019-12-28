@@ -8,6 +8,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'itchyny/lightline.vim'
 Plug 'digitaltoad/vim-pug'
+Plug 'isene/hyperlist.vim'
 call plug#end()
 
 source ~/personal/vue-syntax.vim
@@ -56,6 +57,8 @@ noremap <c-down> :CocCommand chrome.scroll.down<cr>
 map <Leader> <Plug>(easymotion-prefix)
 
 autocmd BufReadPost,BufNewFile *.vue setlocal filetype=vue
+au BufReadCmd *.xmind call zip#Browse(expand("<amatch>"))
+
 
 let $NVIM_NODE_LOG_FILE="/tmp/neo"
 

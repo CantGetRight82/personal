@@ -1,6 +1,7 @@
 export LC_ALL=en_US.UTF-8  
 export LANG=en_US.UTF-8
 
+alias gp='git pull'
 alias gs='git status'
 alias nx='nvim /usr/local/etc/nginx/nginx.conf'
 alias nt='nginx -t'
